@@ -1,0 +1,19 @@
+actor: Tester
+paths:
+    tests: tests
+    log: tests/_output
+    data: tests/_data
+    helpers: tests/_support
+settings:
+    bootstrap: _bootstrap.php
+    colors: true
+    memory_limit: 1024M
+extensions:
+    enabled:
+        - tad\WPBrowser\Extension\Copier
+    config:
+        tad\WPBrowser\Extension\Copier:
+            files:
+                tests/_data/empty-theme: /home/luca/Sites/wp/wp-content/themes/empty-theme
+folders:
+    uploads: /home/luca/Sites/wp/wp-content/uploads
