@@ -9,3 +9,12 @@ Author URI: http://theaveragedev.com
 Text Domain: gattiny
 Domain Path: /languages
 */
+
+add_filter( 'wp_image_editors', 'gattiny_filterImageEditors' );
+function gattiny_filterImageEditors( array $imageEditors ) {
+	require_once dirname( __FILE__ ) . '/src/GifEditor.php';
+
+	array_unshift( $imageEditors, 'gattiny_GifEditor' );
+
+	return $imageEditors;
+}

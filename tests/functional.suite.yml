@@ -11,6 +11,7 @@ modules:
         - Filesystem
         - WPDb
         - WPBrowser
+        - Asserts
     config:
         WPDb:
             dsn: 'mysql:host=localhost;dbname=wp'
