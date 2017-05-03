@@ -11,13 +11,14 @@ class FormatCreationCest {
 
 	protected $uploads;
 
-	protected $sizeMap = [
-		'thumbnail'    => '150x150',
-		'medium'       => '300x169',
-		'medium_large' => '768x432',
-		'large'        => '1024x576',
-		'full'         => '',
-	];
+	protected $sizeMap
+		= [
+			'thumbnail'    => '150x150',
+			'medium'       => '300x169',
+			'medium_large' => '768x432',
+			'large'        => '1024x576',
+			'full'         => '',
+		];
 
 	public function _before(FunctionalTester $I) {
 		$config        = \Codeception\Configuration::config();
@@ -26,11 +27,11 @@ class FormatCreationCest {
 	}
 
 	public function _after(FunctionalTester $I) {
-		//		$I->deleteDir($this->uploads);
+		$I->deleteDir($this->uploads);
 	}
 
 	public function _failed(FunctionalTester $I) {
-		//		$I->deleteDir($this->uploads);
+		$I->deleteDir($this->uploads);
 	}
 
 	/**
@@ -47,8 +48,7 @@ class FormatCreationCest {
 		$I->seeResponseCodeIs(200);
 
 		$I->amInPath($this->uploads);
-		foreach ($this->sizeMap as $slug => $size)
-		{
+		foreach ($this->sizeMap as $slug => $size) {
 			$suffix = '' !== $size ? '-' . $size : '';
 			$I->seeFileFound(basename($this->gif, '.gif') . $suffix . '.gif');
 		}
@@ -68,8 +68,7 @@ class FormatCreationCest {
 		$I->seeResponseCodeIs(200);
 
 		$I->amInPath($this->uploads);
-		foreach ($this->sizeMap as $slug => $size)
-		{
+		foreach ($this->sizeMap as $slug => $size) {
 			$suffix = '' !== $size ? '-' . $size : '';
 			$file   = $this->uploads . DIRECTORY_SEPARATOR . basename($this->gif, '.gif') . $suffix . '.gif';
 			$image  = (new Imagick($file))->coalesceImages();
@@ -93,10 +92,8 @@ class FormatCreationCest {
 		$originalCoalesced = (new Imagick(codecept_data_dir($this->gif)))->coalesceImages();
 
 		$I->amInPath($this->uploads);
-		foreach ($this->sizeMap as $slug => $size)
-		{
-			if ($slug === 'full')
-			{
+		foreach ($this->sizeMap as $slug => $size) {
+			if ($slug === 'full') {
 				continue;
 			}
 			$suffix           = '' !== $size ? '-' . $size : '';
@@ -106,9 +103,20 @@ class FormatCreationCest {
 			// we test just the first frame
 			$originalFrame = $originalCoalesced->getImage();
 			$resizedFrame  = $resizedCoalesced->getImage();
-			$originalFrame->resizeImage($w, $h, Imagick::FILTER_BOX, 1);
+			if ($slug === 'thumbnail') {
+				$originalFrame->resizeImage($w, $h, Imagick::FILTER_BOX, 1, false);
+				$resizedWidth  = $originalFrame->getImageWidth();
+				$resizedHeight = $originalFrame->getImageHeight();
+				$newWidth      = $resizedWidth / 2;
+				$newHeight     = $resizedHeight / 2;
+				$originalFrame->cropimage($newWidth, $newHeight, ($resizedWidth - $newWidth) / 2, ($resizedHeight - $newHeight) / 2);
+				$originalFrame->scaleimage($originalFrame->getImageWidth() * 4, $originalFrame->getImageHeight() * 4);
+				$originalFrame->setImagePage($w, $h, 0, 0);
+			} else {
+				$originalFrame->resizeImage($w, $h, Imagick::FILTER_BOX, 1);
+			}
 			$comparison = $originalFrame->compareImages($resizedFrame, Imagick::METRIC_ROOTMEANSQUAREDERROR);
-			$I->assertTrue(0 <= $comparison[1] && $comparison[1] <= 0.1, "The {$slug} format image is not the same.");
+			$I->assertTrue(0 <= $comparison[1] && $comparison[1] <= 0.1, "The {$slug} format image is not comparable");
 		}
 	}
 }

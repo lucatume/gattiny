@@ -17,8 +17,8 @@ modules:
             dbUser: root
             dbPassword: root
             tablePrefix: int_wp_
-            domain: wp.dev
-            adminEmail: admin@wp.dev
+            domain: wp.localhost
+            adminEmail: admin@wp.localhost
             title: WP Tests
             plugins: [gattiny/gattiny.php]
             activatePlugins: [gattiny/gattiny.php]

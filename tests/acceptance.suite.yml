@@ -18,10 +18,10 @@ modules:
             dump: tests/_data/dump.sql
             populate: true
             cleanup: true
-            url: 'http://wp.dev'
+            url: 'http://wp.localhost'
             tablePrefix: wp_
         WPBrowser:
-            url: 'http://wp.dev'
+            url: 'http://wp.localhost'
             adminUsername: admin
             adminPassword: admin
             adminPath: /wp-admin

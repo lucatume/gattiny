@@ -13,27 +13,23 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 
 		$testImage = $this->image->coalesceImages();
 
-		if ($testImage->count() === 1)
-		{
+		if ($testImage->count() === 1) {
 			return parent::multi_resize($sizes);
 		}
 
-		foreach ($sizes as $size => $data)
-		{
+		foreach ($sizes as $size => $data) {
 			$resized = $this->resize($data['width'], $data['height'], $data['crop']);
 
 			$duplicate = (($originalSize['width'] == $data['width']) && ($originalSize['height'] == $data['height']));
 
-			if (!is_wp_error($resized) && !$duplicate)
-			{
+			if (!is_wp_error($resized) && !$duplicate) {
 				$resized = $this->_save($this->image);
 
 				$this->image->clear();
 				$this->image->destroy();
-				$this->image = NULL;
+				$this->image = null;
 
-				if (!is_wp_error($resized) && $resized)
-				{
+				if (!is_wp_error($resized) && $resized) {
 					unset($resized['path']);
 					$metadata[$size] = $resized;
 				}
@@ -47,56 +43,54 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 		return $metadata;
 	}
 
-	public function resize($max_w, $max_h, $crop = FALSE) {
+	public function resize($max_w, $max_h, $crop = false) {
 		$testImage = $this->image->coalesceImages();
 
-		if ($testImage->count() === 1)
-		{
+		if ($testImage->count() === 1) {
 			return parent::resize($max_w, $max_h, $crop);
 		}
 
-		try
-		{
+		try {
 			$this->image = $testImage;
 
-			do
-			{
-				if ($crop)
-				{
-					$this->image->cropImage($max_w, $max_h, 0, 0);
-					$this->image->setImagePage($max_w, $max_h, 0, 0);
-				}
-				else
-				{
-					$this->image->resizeImage($max_w, 0, Imagick::FILTER_BOX, 1, FALSE);
+			do {
+				if (!$crop) {
+					$this->image->resizeImage($max_w, 0, Imagick::FILTER_BOX, 1, false);
+					$this->update_size($max_w, $this->image->getImageHeight());
+				} else {
+					$this->image->resizeImage($max_w, $max_h, Imagick::FILTER_BOX, 1, false);
+					$resizedWidth  = $this->image->getImageWidth();
+					$resizedHeight = $this->image->getImageHeight();
+					$newWidth  = $resizedWidth / 2;
+					$newHeight = $resizedHeight / 2;
+					$this->image->cropimage($newWidth, $newHeight, ($resizedWidth - $newWidth) / 2, ($resizedHeight - $newHeight) / 2);
+					$this->image->scaleimage($this->image->getImageWidth() * 4, $this->image->getImageHeight() * 4);
+					$this->image->setImagePage($max_w,$max_h,0,0);
+					$this->update_size($max_w, $max_h);
 				}
 			} while ($this->image->nextImage());
 
-			$this->update_size($max_w, $this->image->getImageHeight());
 
-			return TRUE;
-		}
-		catch (Exception $e)
-		{
+			return true;
+		} catch (Exception $e) {
 			return new WP_Error('gattiny-resize-error', __('Gattiny generated an error: ', 'gattiny') . $e->getMessage());
 		}
 
 	}
 
-	public
-	function _save(
-		$image, $filename = NULL, $mime_type = NULL
+	public function _save(
+		$image,
+		$filename = null,
+		$mime_type = null
 	) {
-		if ($this->image->count() === 1)
-		{
+		if ($this->image->count() === 1) {
 			return parent::_save($image, $filename, $mime_type);
 		}
 
-		try
-		{
+		try {
 			$this->image = $this->image->deconstructImages();
-			$filename    = $this->generate_filename(NULL, NULL, 'gif');
-			$this->image->writeImages($filename, TRUE);
+			$filename    = $this->generate_filename(null, null, 'gif');
+			$this->image->writeImages($filename, true);
 
 			/** This filter is documented in wp-includes/class-wp-image-editor-gd.php */
 			return [
@@ -106,9 +100,7 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 				'height'    => $this->size['height'],
 				'mime-type' => $mime_type,
 			];
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			return new WP_Error('gattiny-save-error', __('Gattiny generated an error: ', 'gattiny') . $e->getMessage());
 		}
 
