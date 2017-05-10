@@ -9,6 +9,25 @@ Author URI: http://theaveragedev.com
 Text Domain: gattiny
 Domain Path: /languages
 */
+
+spl_autoload_register('gattiny_autoload');
+function gattiny_autoload($class) {
+	if (0 !== strpos($class, 'gattiny_')) {
+		return false;
+	}
+	$src = dirname(__FILE__) . '/src/';
+	$className = str_replace('gattiny_', '', $class);
+	$relativeClassPath = str_replace('_', '/', $className);
+	$path = $src . $relativeClassPath . '.php';
+	if (!file_exists($path)) {
+		return false;
+	}
+
+	include $path;
+
+	return true;
+}
+
 add_action('admin_init', 'gattiny_maybeDeactivate');
 function gattiny_maybeDeactivate() {
 	$plugin = plugin_basename(__FILE__);
@@ -33,8 +52,6 @@ function gattiny_unsupportedNotice() {
 
 add_filter('wp_image_editors', 'gattiny_filterImageEditors');
 function gattiny_filterImageEditors(array $imageEditors) {
-	require_once dirname(__FILE__) . '/src/GifEditor.php';
-
 	array_unshift($imageEditors, 'gattiny_GifEditor');
 
 	return $imageEditors;

@@ -9,16 +9,16 @@
     "packages-dev": [
         {
             "name": "antecedent/patchwork",
-            "version": "2.0.3",
+            "version": "2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/antecedent/patchwork.git",
-                "reference": "b9dd9ba89279c89134be1d7a0c62a63f78d7e622"
+                "reference": "5e4530a4e795172263648080880f65efa05c77d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/antecedent/patchwork/zipball/b9dd9ba89279c89134be1d7a0c62a63f78d7e622",
-                "reference": "b9dd9ba89279c89134be1d7a0c62a63f78d7e622",
+                "url": "https://api.github.com/repos/antecedent/patchwork/zipball/5e4530a4e795172263648080880f65efa05c77d6",
+                "reference": "5e4530a4e795172263648080880f65efa05c77d6",
                 "shasum": ""
             },
             "require": {
@@ -46,7 +46,7 @@
                 "runkit",
                 "testing"
             ],
-            "time": "2017-03-23T11:32:30+00:00"
+            "time": "2017-05-03T19:01:28+00:00"
         },
         {
             "name": "bacon/bacon-string-utils",

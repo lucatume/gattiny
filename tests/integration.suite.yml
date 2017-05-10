@@ -22,4 +22,3 @@ modules:
             title: WP Tests
             plugins: [gattiny/gattiny.php]
             activatePlugins: [gattiny/gattiny.php]
-            bootstrapActions: []

@@ -1,5 +1,8 @@
 <?php
 
+include_once ABSPATH . '/wp-includes/class-wp-image-editor.php';
+include_once ABSPATH . '/wp-includes/class-wp-image-editor-imagick.php';
+
 class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 
 	public static function test($args = []) {
@@ -7,8 +10,8 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 	}
 
 	public function multi_resize($sizes) {
-		$metadata     = [];
-		$original     = $this->image;
+		$metadata = [];
+		$original = $this->image;
 		$originalSize = $this->size;
 
 		$testImage = $this->image->coalesceImages();
@@ -35,7 +38,7 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 				}
 			}
 
-			$this->size  = $originalSize;
+			$this->size = $originalSize;
 			$this->image = $original;
 		}
 
@@ -59,13 +62,13 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 					$this->update_size($max_w, $this->image->getImageHeight());
 				} else {
 					$this->image->resizeImage($max_w, $max_h, Imagick::FILTER_BOX, 1, false);
-					$resizedWidth  = $this->image->getImageWidth();
+					$resizedWidth = $this->image->getImageWidth();
 					$resizedHeight = $this->image->getImageHeight();
-					$newWidth  = $resizedWidth / 2;
+					$newWidth = $resizedWidth / 2;
 					$newHeight = $resizedHeight / 2;
 					$this->image->cropimage($newWidth, $newHeight, ($resizedWidth - $newWidth) / 2, ($resizedHeight - $newHeight) / 2);
 					$this->image->scaleimage($this->image->getImageWidth() * 4, $this->image->getImageHeight() * 4);
-					$this->image->setImagePage($max_w,$max_h,0,0);
+					$this->image->setImagePage($max_w, $max_h, 0, 0);
 					$this->update_size($max_w, $max_h);
 				}
 			} while ($this->image->nextImage());
@@ -78,26 +81,29 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 
 	}
 
-	public function _save(
-		$image,
-		$filename = null,
-		$mime_type = null
-	) {
+	/**
+	 * @param \Imagick $image
+	 * @param string   $filename
+	 * @param string   $mime_type
+	 *
+	 * @return array|\WP_Error
+	 */
+	public function _save($image, $filename = null, $mime_type = null) {
 		if ($this->image->count() === 1) {
 			return parent::_save($image, $filename, $mime_type);
 		}
 
 		try {
 			$this->image = $this->image->deconstructImages();
-			$filename    = $this->generate_filename(null, null, 'gif');
+			$filename = $this->generate_filename(null, null, 'gif');
 			$this->image->writeImages($filename, true);
 
 			/** This filter is documented in wp-includes/class-wp-image-editor-gd.php */
 			return [
-				'path'      => $filename,
-				'file'      => wp_basename(apply_filters('image_make_intermediate_size', $filename)),
-				'width'     => $this->size['width'],
-				'height'    => $this->size['height'],
+				'path' => $filename,
+				'file' => wp_basename(apply_filters('image_make_intermediate_size', $filename)),
+				'width' => $this->size['width'],
+				'height' => $this->size['height'],
 				'mime-type' => $mime_type,
 			];
 		} catch (Exception $e) {
