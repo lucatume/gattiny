@@ -9,8 +9,29 @@
             "email": "luca@theaveragedev.com"
         }
     ],
-    "require": {},
+    "require": {
+        "lucatume/di52": "2.0.6",
+        "xrstf/composer-php52": "^1.0"
+    },
     "require-dev": {
         "lucatume/wp-browser": "^1.19"
+    },
+    "autoload": {
+        "psr-0": {
+            "gattiny_": [
+                "src/"
+            ]
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "xrstf\\Composer52\\Generator::onPostInstallCmd"
+        ],
+        "post-update-cmd": [
+            "xrstf\\Composer52\\Generator::onPostInstallCmd"
+        ],
+        "post-autoload-dump": [
+            "xrstf\\Composer52\\Generator::onPostInstallCmd"
+        ]
     }
 }
