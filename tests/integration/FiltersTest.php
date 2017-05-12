@@ -25,4 +25,18 @@ class FiltersTest extends \Codeception\TestCase\WPTestCase {
 			$this->assertRegExp('/^.*?kitten-animated.*?\.gif/', $filename);
 		}
 	}
+
+	/**
+	 * It should not filter the image editors if the plugin is not supported
+	 *
+	 * @test
+	 */
+	public function it_should_not_filter_the_image_editors_if_the_plugin_is_not_supported() {
+		update_option('gattiny_supported', '0');
+
+		$imageEditors = new gattiny_ImageEditors();
+		$filtered = $imageEditors->filterImageEditors([]);
+
+		$this->assertNotContains('gattiny_GifEditor', $filtered);
+	}
 }

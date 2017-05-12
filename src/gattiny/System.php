@@ -17,11 +17,7 @@ class gattiny_System {
 	}
 
 	public function maybeDeactivate() {
-		$plugin = plugin_basename($this->mainFile);
-		if (!empty($_GET['activate']) && is_plugin_active($plugin) && current_user_can('activate_plugins')) {
-			return;
-		}
-		if ('0' === get_option('gattiny_supported')) {
+		if ('0' === get_option('gattiny_supported') || !extension_loaded('imagick')) {
 			unset($_GET['activate']);
 			add_action('admin_notices', array($this, 'unsupportedNotice'));
 		}
