@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Class gattiny_System
+ *
+ * Handles the plugin interaction with the system and WordPress installation.
+ */
 class gattiny_System {
 
 	/**
@@ -29,11 +34,5 @@ class gattiny_System {
             <p><?php _e('Gattiny is not supported by your server!', 'gattiny'); ?></p>
         </div>
 		<?php
-	}
-
-	public function filterImageEditors(array $imageEditors) {
-		array_unshift($imageEditors, 'gattiny_GifEditor');
-
-		return $imageEditors;
 	}
 }
