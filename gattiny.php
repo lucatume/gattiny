@@ -14,8 +14,8 @@ include_once dirname(__FILE__) . '/vendor/autoload_52.php';
 
 $di = new tad_DI52_Container();
 
-$di->singleton('system', 'gattiny_System');
-$di->singleton('image-editors', 'gattiny_ImageEditors');
+$di->singleton('gattiny.system', 'gattiny_System');
+$di->singleton('gattiny.image-editors', 'gattiny_ImageEditors');
 
-add_action('admin_init', $di->callback('system', 'maybeDeactivate'));
-add_filter('wp_image_editors', $di->callback('image-editors', 'filterImageEditors'));
+add_action('admin_init', $di->callback('gattiny.system', 'maybeDeactivate'));
+add_filter('wp_image_editors', $di->callback('gattiny.image-editors', 'filterImageEditors'));

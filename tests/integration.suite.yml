@@ -11,14 +11,14 @@ modules:
         - WPLoader
     config:
         WPLoader:
-            wpRootFolder: /home/luca/Sites/wp
-            dbName: wpTests
-            dbHost: localhost
-            dbUser: root
-            dbPassword: root
+            wpRootFolder: %WP_ROOT_FOLDER%
+            dbName: %TEST_DB_NAME%
+            dbHost: %TEST_DB_HOST%
+            dbUser: %TEST_DB_USER%
+            dbPassword: %TEST_DB_PASSWORD%
             tablePrefix: int_wp_
-            domain: wp.localhost
-            adminEmail: admin@wp.localhost
+            domain: %WP_DOMAIN%
+            adminEmail: admin@%WP_DOMAIN%
             title: WP Tests
             plugins: [gattiny/gattiny.php]
             activatePlugins: [gattiny/gattiny.php]

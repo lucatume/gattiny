@@ -8,4 +8,7 @@ composer.phar
 # composer.lock
 
 
-tests/_output/*
+tests/_output
+
+.env.local
+codeception.yml

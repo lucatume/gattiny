@@ -11,8 +11,7 @@ class FormatCreationCest {
 
 	protected $uploads;
 
-	protected $sizeMap
-		= [
+	protected $sizeMap = [
 			'thumbnail'    => '150x150',
 			'medium'       => '300x169',
 			'medium_large' => '768x432',
@@ -21,9 +20,9 @@ class FormatCreationCest {
 		];
 
 	public function _before(FunctionalTester $I) {
-		$config        = \Codeception\Configuration::config();
-		$this->uploads = $config['folders']['uploads'] . '/' . date('Y/m');
-		$I->useTheme('empty');
+		$this->uploads = getenv( 'WP_UPLOADS_FOLDER' ) . '/' . date( 'Y/m' );
+		$I->deleteDir($this->uploads);
+		$I->haveTheme( 'empty', "echo 'Hello there!';" );
 	}
 
 	public function _after(FunctionalTester $I) {

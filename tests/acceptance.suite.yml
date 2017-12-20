@@ -12,16 +12,16 @@ modules:
         - WPBrowser
     config:
         WPDb:
-            dsn: 'mysql:host=localhost;dbname=wp'
-            user: root
-            password: root
+            dsn: 'mysql:host=%DB_HOST%;dbname=%DB_NAME%'
+            user: %DB_USER%
+            password: %DB_PASSWORD%
             dump: tests/_data/dump.sql
             populate: true
             cleanup: true
-            url: 'http://wp.localhost'
-            tablePrefix: wp_
+            url: '%WP_URL%'
+            tablePrefix: %TABLE_PREFIX%
         WPBrowser:
-            url: 'http://wp.localhost'
-            adminUsername: admin
-            adminPassword: admin
+            url: '%WP_URL%'
+            adminUsername: %WP_ADMIN_USERNAME%
+            adminPassword: %WP_ADMIN_PASSWORD%
             adminPath: /wp-admin
