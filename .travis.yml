@@ -96,7 +96,6 @@ install:
   - sudo cp tests/travis/nginx.conf /etc/nginx/sites-available/$WP_DOMAIN
   - sudo sed -e "s?%WP_ROOT_FOLDER%?$WP_ROOT_FOLDER?g" --in-place /etc/nginx/sites-available/$WP_DOMAIN
   - sudo sed -e "s?%WP_DOMAIN%?$WP_DOMAIN?g" --in-place /etc/nginx/sites-available/$WP_DOMAIN
-  - cat /etc/nginx/sites-available/$WP_DOMAIN
   # enable the site
   - sudo ln -s /etc/nginx/sites-available/$WP_DOMAIN /etc/nginx/sites-enabled/
 
