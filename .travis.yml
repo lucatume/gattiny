@@ -112,4 +112,4 @@ before_script:
 script:
   - codecept run integration
   - codecept run functional -vvv
-  - codecept run acceptance -vv     v
+  - codecept run acceptance -vvv
