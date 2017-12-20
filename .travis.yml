@@ -28,13 +28,11 @@ addons:
     sources:
       - sourceline: 'ppa:ondrej/php'
     packages:
-      - libmagickwand-dev
       - imagemagick
       - libjpeg-dev
       - libpng12-dev
       - php7.1-fpm
       - php7.1-mysql
-      - php7.1-imagick
       - nginx
   hosts:
     - wp.localhost
@@ -69,6 +67,10 @@ before_install:
   - export PATH=vendor/bin:$PATH
   # disable XDebug to speed up the tests
   - phpenv config-rm xdebug.ini
+  # install imagick PHP extension
+  - pear config-set preferred_state beta
+  - pecl channel-update pecl.php.net
+  - yes | pecl install imagick
 
 install:
   - composer install
