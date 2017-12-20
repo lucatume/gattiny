@@ -61,8 +61,6 @@ before_install:
   # install wp-cli in the `tools` folder
   - wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -P $(pwd)/tools/
   - chmod +x tools/wp-cli.phar && mv tools/wp-cli.phar tools/wp
-  # allow the `wp` command to run from Travis CI root folder
-  - echo "path: $WP_FOLDER" > $TRAVIS_BUILD_DIR/wp-cli.yml
   # append the `tools` folder to the PATH
   - export PATH=$PATH:$(pwd)/tools
   # prepend the `vendor/bin` folder the PATH
