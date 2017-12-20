@@ -80,6 +80,7 @@ install:
   - wp core update-db
   # link the plugin code in the WordPress installation
   - ln -s $TRAVIS_BUILD_DIR $WP_FOLDER/wp-content/plugins/gattiny
+  - ls -la $WP_FOLDER/wp-content/plugins
   # activate the plugin on the site
   - wp plugin deactivate $(wp plugin list --status=active --field=name)
   - wp plugin activate gattiny
