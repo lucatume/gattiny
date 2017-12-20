@@ -6,7 +6,7 @@ notifications:
   email: false
 
 php:
-  - '5.6'
+  - '7.1'
 
 matrix:
   fast_finish: true
@@ -25,15 +25,17 @@ cache:
 
 addons:
   apt:
+    sources:
+      - sourceline: 'ppa:ondrej/php'
     packages:
       - libjpeg-dev
       - libpng12-dev
-      - php5-fpm
-      - php5-mysql
-      - php5-imagick
+      - php7.1-fpm
+      - php7.1-mysql
+      - php7.1-imagick
       - nginx
   hosts:
-    - wp.local
+    - wp.localhost
 
 env:
   global:
@@ -95,8 +97,10 @@ install:
 
 before_script:
   # restart Nnginx and PHP-FPM services
-  - sudo service php5-fpm restart
+  - sudo service php7.1-fpm restart
   - sudo service nginx restart
+  # sanity check
+  - curl $WP_URL
 
   # build Codeception modules
   - codecept build
