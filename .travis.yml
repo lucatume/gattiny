@@ -113,4 +113,4 @@ script:
   - codecept run integration
   - codecept run functional -vvv
   - codecept run acceptance -vvv
-  - cat /var/log/nginx/error.log
+  - sudo cat /var/log/nginx/error.log
