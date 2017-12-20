@@ -6,9 +6,7 @@ notifications:
   email: false
 
 php:
-  - '7.0'
-  - '7.1'
-  - nightly
+  - '5.6'
 
 matrix:
   fast_finish: true
@@ -30,9 +28,9 @@ addons:
     packages:
       - libjpeg-dev
       - libpng12-dev
-      - php7-fpm
-      - php7-mysql
-      - php7-imagick
+      - php5-fpm
+      - php5-mysql
+      - php5-imagick
       - nginx
   hosts:
     - wp.local
@@ -97,7 +95,7 @@ install:
 
 before_script:
   # restart Nnginx and PHP-FPM services
-  - sudo service php7-fpm restart
+  - sudo service php5-fpm restart
   - sudo service nginx restart
 
   # build Codeception modules
