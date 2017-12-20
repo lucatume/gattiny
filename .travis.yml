@@ -67,7 +67,7 @@ before_install:
   - phpenv config-rm xdebug.ini
 
 install:
-  - composer install --prefer-dist
+  - composer install
   # install WordPress
   - cd $WP_FOLDER
   - wp core download --version=$WP_VERSION
