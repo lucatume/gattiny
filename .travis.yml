@@ -39,7 +39,7 @@ addons:
 
 env:
   global:
-    - WP_FOLDER="/tmp/wordpress"
+    - WP_ROOT_FOLDER="/tmp/wordpress"
     - WP_URL="http://wp.localhost"
     - WP_DOMAIN="wp.localhost"
     - DB_NAME="wp"
@@ -56,7 +56,7 @@ before_install:
   - mysql -e "create database IF NOT EXISTS $DB_NAME;" -uroot
   - mysql -e "create database IF NOT EXISTS $TEST_DB_NAME;" -uroot
   # set up folders
-  - mkdir -p $WP_FOLDER
+  - mkdir -p $WP_ROOT_FOLDER
   - mkdir tools
   # install wp-cli in the `tools` folder
   - wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -P $(pwd)/tools/
@@ -75,7 +75,7 @@ before_install:
 install:
   - composer install
   # install WordPress
-  - cd $WP_FOLDER
+  - cd $WP_ROOT_FOLDER
   - wp core download --version=$WP_VERSION
   - wp config create --dbname="$DB_NAME" --dbuser="root" --dbpass="" --dbhost="127.0.0.1" --dbprefix="$WP_TABLE_PREFIX"
   - wp core install --url="$WP_URL" --title="Test" --admin_user="$WP_ADMIN_USERNAME" --admin_password="$WP_ADMIN_PASSWORD" --admin_email="admin@$WP_DOMAIN" --skip-email
@@ -83,8 +83,8 @@ install:
   # update WordPress database to avoid prompts
   - wp core update-db
   # link the plugin code in the WordPress installation
-  - ln -s $TRAVIS_BUILD_DIR $WP_FOLDER/wp-content/plugins/gattiny
-  - ls -la $WP_FOLDER/wp-content/plugins
+  - ln -s $TRAVIS_BUILD_DIR $WP_ROOT_FOLDER/wp-content/plugins/gattiny
+  - ls -la $WP_ROOT_FOLDER/wp-content/plugins
   # activate the plugin on the site
   - wp plugin deactivate $(wp plugin list --status=active --field=name)
   - wp plugin activate gattiny
