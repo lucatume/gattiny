@@ -28,6 +28,8 @@ addons:
     sources:
       - sourceline: 'ppa:ondrej/php'
     packages:
+      - libmagickwand-dev
+      - imagemagick
       - libjpeg-dev
       - libpng12-dev
       - php7.1-fpm
