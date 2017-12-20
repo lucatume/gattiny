@@ -70,7 +70,7 @@ before_install:
 
 install:
   - composer install --prefer-dist
-  # install WordPress in the `wordpress` folder
+  # install WordPress
   - cd $WP_FOLDER
   - wp core download --version=$WP_VERSION
   - wp config create --dbname="$DB_NAME" --dbuser="root" --dbpass="" --dbhost="127.0.0.1" --dbprefix="$WP_TABLE_PREFIX"
