@@ -30,9 +30,9 @@ addons:
     packages:
       - libjpeg-dev
       - libpng12-dev
-      - php5-fpm
-      - php5-mysql
-      - php5-imagick
+      - php7-fpm
+      - php7-mysql
+      - php7-imagick
       - nginx
   hosts:
     - wp.local
@@ -97,7 +97,7 @@ install:
 
 before_script:
   # restart Nnginx and PHP-FPM services
-  - sudo service php5-fpm restart
+  - sudo service php7-fpm restart
   - sudo service nginx restart
 
   # build Codeception modules
