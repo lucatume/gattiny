@@ -63,7 +63,7 @@ PHP;
 		$I->amInPath( $this->uploads );
 		foreach ( $this->sizeMap as $slug => $size ) {
 			$suffix = '' !== $size ? '-' . $size : '';
-			$I->seeFileFound( basename( $this->gif, '.gif' ) . $suffix . '.gif' );
+			$I->seeFileFound( basename( $this->gif, '.gif' ) . $suffix . '.gif', $this->uploads );
 		}
 	}
 
@@ -83,7 +83,7 @@ PHP;
 		$I->amInPath( $this->uploads );
 		foreach ( $this->sizeMap as $slug => $size ) {
 			$suffix = '' !== $size ? '-' . $size : '';
-			$file   = $this->uploads . DIRECTORY_SEPARATOR . basename( $this->gif, '.gif' ) . $suffix . '.gif';
+			$file   = $this->uploads . '/' . basename( $this->gif, '.gif' ) . $suffix . '.gif';
 			$image  = ( new Imagick( $file ) )->coalesceImages();
 			$I->assertEquals( $this->frameCount, $image->count() );
 		}
