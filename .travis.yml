@@ -109,10 +109,7 @@ before_script:
   - echo "php_flag[display_errors] = on" >> /etc/php/7.1/fpm/pool.d/www.conf
   - echo "php_admin_value[error_log] = /var/log/fpm-php.www.log" >> /etc/php/7.1/fpm/pool.d/www.conf
   - echo "php_admin_flag[log_errors] = on" >> /etc/php/7.1/fpm/pool.d/www.conf
-  - cat /etc/php/7.1/fpm/pool.d/www.conf | grep catch_workers_output
-  - cat /etc/php/7.1/fpm/pool.d/www.conf | grep display_errors
-  - cat /etc/php/7.1/fpm/pool.d/www.conf | grep error_log
-  - cat /etc/php/7.1/fpm/pool.d/www.conf | grep log_errors
+  - sudo mkdir -p /var/log && sudo touch /var/log/fpm-php.www.log && sudo chmod ugo+rw /var/log/fpm-php.www.log
   # restart Nnginx and PHP-FPM services
   - sudo service php7.1-fpm start
   - sudo service nginx restart
@@ -128,3 +125,4 @@ script:
   - sudo tail -75 $WP_ROOT_FOLDER/wp-content/debug.log
   - sudo tail -75 /var/log/php7.1-fpm.log
   - sudo tail -75 /var/log/fpm-php.www.log
+  - sudo tail -75 /var/log/nginx/error.log
