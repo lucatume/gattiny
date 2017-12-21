@@ -22,14 +22,6 @@ class FormatCreationCest {
 		$this->uploads = getenv( 'WP_UPLOADS_FOLDER' ) . '/' . date( 'Y/m' );
 		$I->deleteDir( $this->uploads );
 
-		$fsControlCode = <<< PHP
-define( 'FS_METHOD', 'direct' );
-define( 'FS_CHMOD_DIR', 0777 );
-define( 'FS_CHMOD_FILE', 0777 );
-PHP;
-
-		$I->haveMuPlugin('fs-control.php',$fsControlCode);
-
 		$functionsCode = <<< PHP
 add_image_size( 'custom-format-one', 100, 130, true );
 add_image_size( 'custom-format-two', 133, 345, false );
