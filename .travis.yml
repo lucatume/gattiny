@@ -78,6 +78,8 @@ install:
   - cd $WP_ROOT_FOLDER
   - wp core download --version=$WP_VERSION
   - wp config create --dbname="$DB_NAME" --dbuser="root" --dbpass="" --dbhost="127.0.0.1" --dbprefix="$WP_TABLE_PREFIX"
+  # enable WP Debug and Log
+  - sudo sed -e "s#^\$table_#define('WP_DEBUG',true); define('WP_DEBUG_LOG',true); \$table_#g" --in-place $WP_ROOT_FOLDER/wp-config.php
   - wp core install --url="$WP_URL" --title="Test" --admin_user="$WP_ADMIN_USERNAME" --admin_password="$WP_ADMIN_PASSWORD" --admin_email="admin@$WP_DOMAIN" --skip-email
   - wp rewrite structure '/%postname%/' --hard
   # update WordPress database to avoid prompts
@@ -112,5 +114,5 @@ before_script:
 script:
   - codecept run integration
   - codecept run functional -vvv
-  - codecept run acceptance -vvv
-  - sudo cat /var/log/nginx/error.log
+  - codecept run acceptance
+  - sudo cat $WP_ROOT_FOLDER/wp-content/debug.log
