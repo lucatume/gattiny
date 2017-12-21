@@ -104,8 +104,10 @@ install:
 
 before_script:
   # enable workers log in PHP-FPM
-  - sudo cat /etc/php/7.1/fpm/pool.d/www.conf
   - sudo sed -e "s#^;catch_workers_output#catch_workers_output#g" --in-place /etc/php/7.1/fpm/pool.d/www.conf
+  - sudo sed -e "s#^;php_flag[display_errors]#php_flag[display_errors]#g" --in-place /etc/php/7.1/fpm/pool.d/www.conf
+  - sudo sed -e "s#^;php_admin_value[error_log]#php_admin_value[error_log]#g" --in-place /etc/php/7.1/fpm/pool.d/www.conf
+  - sudo sed -e "s#^;php_admin_value[log_errors]#php_admin_value[log_errors]#g" --in-place /etc/php/7.1/fpm/pool.d/www.conf
   - sudo cat /etc/php/7.1/fpm/pool.d/www.conf
   # restart Nnginx and PHP-FPM services
   - sudo service php7.1-fpm restart
@@ -117,7 +119,8 @@ before_script:
 
 script:
   - codecept run integration
-  - codecept run functional -vvv
+  - codecept run functional
   - codecept run acceptance
   - sudo cat $WP_ROOT_FOLDER/wp-content/debug.log
   - sudo cat /var/log/php7.1-fpm.log
+  - sudo cat /var/log/fpm-php.www.log
