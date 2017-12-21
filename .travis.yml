@@ -94,6 +94,9 @@ install:
   - wp db export $TRAVIS_BUILD_DIR/tests/_data/dump.sql
   # make sure the wp-content folder is universe writable
   - sudo chmod -R ugo+rw $WP_ROOT_FOLDER/wp-content/uploads
+  - export DATE_UPLOADS_FOLDER=$WP_ROOT_FOLDER/wp-content/uploads/$(date +%Y)/$(date +%m)
+  - sudo mkdir -p $DATE_UPLOADS_FOLDER
+  - sudo chmod -R ugo+rw $DATE_UPLOADS_FOLDER
   # get back to the build folder
   - cd $TRAVIS_BUILD_DIR
   # copy the Nginx configuration file to the available sites
