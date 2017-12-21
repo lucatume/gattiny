@@ -105,6 +105,7 @@ install:
   - sudo ls -la $WP_ROOT_FOLDER/wp-content/uploads
   # enable the site
   - sudo ln -s /etc/nginx/sites-available/$WP_DOMAIN /etc/nginx/sites-enabled/
+  - sudo cat /etc/php-fpm.conf
 
 before_script:
   # restart Nnginx and PHP-FPM services
