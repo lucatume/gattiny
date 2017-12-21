@@ -120,7 +120,7 @@ before_script:
 
 script:
   - codecept run integration
-  - codecept run functional
+  - codecept run functional -vvv
   - codecept run acceptance
   - sudo tail -75 $WP_ROOT_FOLDER/wp-content/debug.log
   - sudo tail -75 /var/log/php7.1-fpm.log
