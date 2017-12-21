@@ -105,8 +105,6 @@ before_script:
   - sudo service nginx restart
   # sanity check
   - curl $WP_URL
-  # enable PHP-FPM logging to Nginx
-  - sudo echo "catch_workers_output = yes" >> /etc/php-fpm.d/www.conf
   # build Codeception modules
   - codecept build
 
