@@ -21,7 +21,16 @@ class FormatCreationCest {
 	public function _before( FunctionalTester $I ) {
 		$this->uploads = getenv( 'WP_UPLOADS_FOLDER' ) . '/' . date( 'Y/m' );
 		$I->deleteDir( $this->uploads );
-		$functions_code = <<< PHP
+
+		$fsControlCode = <<< PHP
+define( 'FS_METHOD', 'direct' );
+define( 'FS_CHMOD_DIR', 0777 );
+define( 'FS_CHMOD_FILE', 0777 );
+PHP;
+
+		$I->haveMuPlugin('fs-control.php',$fsControlCode);
+
+		$functionsCode = <<< PHP
 add_image_size( 'custom-format-one', 100, 130, true );
 add_image_size( 'custom-format-two', 133, 345, false );
 
@@ -34,7 +43,7 @@ function testRemoveDefaultSizes( array \$sizes ) {
 }
 PHP;
 
-		$I->haveTheme( 'test', "echo 'Hello there!';", $functions_code );
+		$I->haveTheme( 'test', "echo 'Hello there!';", $functionsCode );
 		$I->useTheme( 'test' );
 	}
 
