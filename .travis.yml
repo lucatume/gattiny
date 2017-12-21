@@ -104,6 +104,7 @@ install:
 before_script:
   # enable workers log in PHP-FPM
   - sudo service php7.1-fpm stop
+  - sudo chmod ugo+rw /etc/php/7.1/fpm/pool.d/www.conf
   - echo "catch_workers_output = yes" >> /etc/php/7.1/fpm/pool.d/www.conf
   - echo "php_flag[display_errors] = on" >> /etc/php/7.1/fpm/pool.d/www.conf
   - echo "php_admin_value[error_log] = /var/log/fpm-php.www.log" >> /etc/php/7.1/fpm/pool.d/www.conf
