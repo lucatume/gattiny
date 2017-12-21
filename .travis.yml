@@ -105,9 +105,9 @@ install:
 before_script:
   # enable workers log in PHP-FPM
   - sudo sed -e "s#^;catch_workers_output#catch_workers_output#g" --in-place /etc/php/7.1/fpm/pool.d/www.conf
-  - sudo sed -e "s#^;php_flag[display_errors]#php_flag[display_errors]#g" --in-place /etc/php/7.1/fpm/pool.d/www.conf
-  - sudo sed -e "s#^;php_admin_value[error_log]#php_admin_value[error_log]#g" --in-place /etc/php/7.1/fpm/pool.d/www.conf
-  - sudo sed -e "s#^;php_admin_value[log_errors]#php_admin_value[log_errors]#g" --in-place /etc/php/7.1/fpm/pool.d/www.conf
+  - sudo sed -e "s#^;php_flag\[display_errors\]#php_flag[display_errors]#g" --in-place /etc/php/7.1/fpm/pool.d/www.conf
+  - sudo sed -e "s#^;php_admin_value\[error_log\]#php_admin_value[error_log]#g" --in-place /etc/php/7.1/fpm/pool.d/www.conf
+  - sudo sed -e "s#^;php_admin_value\[log_errors\]#php_admin_value[log_errors]#g" --in-place /etc/php/7.1/fpm/pool.d/www.conf
   - sudo cat /etc/php/7.1/fpm/pool.d/www.conf | grep catch_workers_output
   - sudo cat /etc/php/7.1/fpm/pool.d/www.conf | grep display_errors
   - sudo cat /etc/php/7.1/fpm/pool.d/www.conf | grep error_log
