@@ -31,8 +31,7 @@ addons:
       - imagemagick
       - libjpeg-dev
       - libpng12-dev
-      - php7.1-fpm
-      - php7.1-mysql
+      - realpath
       - nginx
   hosts:
     - wp.localhost
@@ -74,12 +73,12 @@ before_install:
 
 install:
   - composer install
+  # install Nginx (credits to https://github.com/tburry/travis-nginx-test)
+  - travis/install-nginx.sh
   # install WordPress
   - cd $WP_ROOT_FOLDER
   - wp core download --version=$WP_VERSION
   - wp config create --dbname="$DB_NAME" --dbuser="root" --dbpass="" --dbhost="127.0.0.1" --dbprefix="$WP_TABLE_PREFIX"
-  # enable WP Debug and Log
-  - sudo sed -e "s#^\$table_#define('WP_DEBUG',true); define('WP_DEBUG_LOG',true); \$table_#g" --in-place $WP_ROOT_FOLDER/wp-config.php
   - wp core install --url="$WP_URL" --title="Test" --admin_user="$WP_ADMIN_USERNAME" --admin_password="$WP_ADMIN_PASSWORD" --admin_email="admin@$WP_DOMAIN" --skip-email
   - wp rewrite structure '/%postname%/' --hard
   # update WordPress database to avoid prompts
@@ -94,23 +93,8 @@ install:
   - wp db export $TRAVIS_BUILD_DIR/tests/_data/dump.sql
   # get back to the build folder
   - cd $TRAVIS_BUILD_DIR
-  # copy the Nginx configuration file to the available sites
-  - sudo cp tests/travis/nginx.conf /etc/nginx/sites-available/$WP_DOMAIN
-  - sudo sed -e "s?%WP_ROOT_FOLDER%?$WP_ROOT_FOLDER?g" --in-place /etc/nginx/sites-available/$WP_DOMAIN
-  - sudo sed -e "s?%WP_DOMAIN%?$WP_DOMAIN?g" --in-place /etc/nginx/sites-available/$WP_DOMAIN
-  # change the site folder ownership to the php-fpm user
-  - sudo chmod -R 777 $WP_ROOT_FOLDER
-  - sudo ls -la $WP_ROOT_FOLDER
-  - sudo ls -la $WP_ROOT_FOLDER/wp-content
-  - sudo ls -la $WP_ROOT_FOLDER/wp-content/uploads
-  # enable the site
-  - sudo ln -s /etc/nginx/sites-available/$WP_DOMAIN /etc/nginx/sites-enabled/
-  - sudo cat /etc/php-fpm.conf
 
 before_script:
-  # restart Nnginx and PHP-FPM services
-  - sudo service php7.1-fpm restart
-  - sudo service nginx restart
   # build Codeception modules
   - codecept build
 
