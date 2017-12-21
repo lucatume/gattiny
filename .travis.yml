@@ -103,6 +103,7 @@ install:
 
 before_script:
   # enable workers log in PHP-FPM
+  - sudo service php7.1-fpm stop
   - sudo echo "catch_workers_output = yes" >> /etc/php/7.1/fpm/pool.d/www.conf
   - sudo echo "php_flag[display_errors] = on" >> /etc/php/7.1/fpm/pool.d/www.conf
   - sudo echo "php_admin_value[error_log] = /var/log/fpm-php.www.log" >> /etc/php/7.1/fpm/pool.d/www.conf
@@ -112,7 +113,7 @@ before_script:
   - sudo cat /etc/php/7.1/fpm/pool.d/www.conf | grep error_log
   - sudo cat /etc/php/7.1/fpm/pool.d/www.conf | grep log_errors
   # restart Nnginx and PHP-FPM services
-  - sudo service php7.1-fpm restart
+  - sudo service php7.1-fpm start
   - sudo service nginx restart
   # sanity check
   - curl $WP_URL
