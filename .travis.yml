@@ -93,7 +93,8 @@ install:
   # export a dump of the just installed database to the _data folder
   - wp db export $TRAVIS_BUILD_DIR/tests/_data/dump.sql
   # make sure the wp-content folder is universe writable
-  - sudo chmod -R ugo+rw $WP_ROOT_FOLDER/wp-content
+  - sudo mkdir $WP_ROOT_FOLDER/wp-content/uploads
+  - sudo chmod -R ugo+rw $WP_ROOT_FOLDER/wp-content/uploads
   # get back to the build folder
   - cd $TRAVIS_BUILD_DIR
   # copy the Nginx configuration file to the available sites
@@ -104,16 +105,8 @@ install:
   - sudo ln -s /etc/nginx/sites-available/$WP_DOMAIN /etc/nginx/sites-enabled/
 
 before_script:
-  # enable workers log in PHP-FPM
-  - sudo service php7.1-fpm stop
-  - sudo chmod ugo+rw /etc/php/7.1/fpm/pool.d/www.conf
-  - echo "catch_workers_output = yes" >> /etc/php/7.1/fpm/pool.d/www.conf
-  - echo "php_flag[display_errors] = on" >> /etc/php/7.1/fpm/pool.d/www.conf
-  - echo "php_admin_value[error_log] = /var/log/fpm-php.www.log" >> /etc/php/7.1/fpm/pool.d/www.conf
-  - echo "php_admin_flag[log_errors] = on" >> /etc/php/7.1/fpm/pool.d/www.conf
-  - sudo mkdir -p /var/log && sudo touch /var/log/fpm-php.www.log && sudo chmod ugo+rw /var/log/fpm-php.www.log
   # restart Nnginx and PHP-FPM services
-  - sudo service php7.1-fpm start
+  - sudo service php7.1-fpm restart
   - sudo service nginx restart
   # sanity check
   - curl $WP_URL
@@ -124,7 +117,3 @@ script:
 #  - codecept run integration
   - codecept run functional -vvv
 #  - codecept run acceptance
-  - sudo tail -75 $WP_ROOT_FOLDER/wp-content/debug.log
-  - sudo tail -75 /var/log/php7.1-fpm.log
-  - sudo tail -75 /var/log/fpm-php.www.log
-  - sudo tail -75 /var/log/nginx/error.log
