@@ -108,7 +108,10 @@ before_script:
   - sudo sed -e "s#^;php_flag[display_errors]#php_flag[display_errors]#g" --in-place /etc/php/7.1/fpm/pool.d/www.conf
   - sudo sed -e "s#^;php_admin_value[error_log]#php_admin_value[error_log]#g" --in-place /etc/php/7.1/fpm/pool.d/www.conf
   - sudo sed -e "s#^;php_admin_value[log_errors]#php_admin_value[log_errors]#g" --in-place /etc/php/7.1/fpm/pool.d/www.conf
-  - sudo cat /etc/php/7.1/fpm/pool.d/www.conf
+  - sudo cat /etc/php/7.1/fpm/pool.d/www.conf | grep catch_workers_output
+  - sudo cat /etc/php/7.1/fpm/pool.d/www.conf | grep display_errors
+  - sudo cat /etc/php/7.1/fpm/pool.d/www.conf | grep error_log
+  - sudo cat /etc/php/7.1/fpm/pool.d/www.conf | grep log_errors
   # restart Nnginx and PHP-FPM services
   - sudo service php7.1-fpm restart
   - sudo service nginx restart
@@ -121,6 +124,6 @@ script:
   - codecept run integration
   - codecept run functional
   - codecept run acceptance
-  - sudo cat $WP_ROOT_FOLDER/wp-content/debug.log
-  - sudo cat /var/log/php7.1-fpm.log
-  - sudo cat /var/log/fpm-php.www.log
+  - sudo tail -75 $WP_ROOT_FOLDER/wp-content/debug.log
+  - sudo tail -75 /var/log/php7.1-fpm.log
+  - sudo tail -75 /var/log/fpm-php.www.log
