@@ -71,7 +71,6 @@ before_install:
   - pear config-set preferred_state beta
   - pecl channel-update pecl.php.net
   - yes | pecl install imagick
-  - sudo chown www-data:www-data $WP_ROOT_FOLDER
 
 install:
   - composer install
@@ -93,18 +92,14 @@ install:
   - wp plugin activate gattiny
   # export a dump of the just installed database to the _data folder
   - wp db export $TRAVIS_BUILD_DIR/tests/_data/dump.sql
-#  # make sure the wp-content folder is universe writable
-#  - sudo chmod -R 777 $WP_ROOT_FOLDER/wp-content/uploads
-#  - export DATE_UPLOADS_FOLDER=$WP_ROOT_FOLDER/wp-content/uploads/$(date +%Y)/$(date +%m)
-#  - sudo mkdir -p $DATE_UPLOADS_FOLDER
-#  - sudo chmod -R 777 $DATE_UPLOADS_FOLDER
-#  - ls -la $DATE_UPLOADS_FOLDER
   # get back to the build folder
   - cd $TRAVIS_BUILD_DIR
   # copy the Nginx configuration file to the available sites
   - sudo cp tests/travis/nginx.conf /etc/nginx/sites-available/$WP_DOMAIN
   - sudo sed -e "s?%WP_ROOT_FOLDER%?$WP_ROOT_FOLDER?g" --in-place /etc/nginx/sites-available/$WP_DOMAIN
   - sudo sed -e "s?%WP_DOMAIN%?$WP_DOMAIN?g" --in-place /etc/nginx/sites-available/$WP_DOMAIN
+  # change the site folder ownership to the php-fpm user
+  - sudo chown www-data:www-data $WP_ROOT_FOLDER
   # enable the site
   - sudo ln -s /etc/nginx/sites-available/$WP_DOMAIN /etc/nginx/sites-enabled/
 
