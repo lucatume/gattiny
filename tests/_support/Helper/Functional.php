@@ -7,4 +7,7 @@ namespace Helper;
 class Functional extends \Codeception\Module
 {
 
+	public function debugResponse() {
+		codecept_debug('Response debug: ' . $this->getModule('WPBrowser')->_getResponseContent());
+	}
 }

@@ -44,6 +44,7 @@ class FormatCreationCest {
 		$I->attachFile('input[name="async-upload"]', $this->gif);
 		$I->click('input[name="html-upload"]');
 
+		$I->debugResponse();
 		$I->seeResponseCodeIs(200);
 
 		$I->amInPath($this->uploads);
