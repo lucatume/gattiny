@@ -103,6 +103,10 @@ install:
   - sudo ln -s /etc/nginx/sites-available/$WP_DOMAIN /etc/nginx/sites-enabled/
 
 before_script:
+  # enable workers log in PHP-FPM
+  - sudo cat /etc/php/7.1/fpm/pool.d/www.conf
+  - sudo sed -e "s#^;catch_workers_output#catch_workers_output#g" --in-place /etc/php/7.1/fpm/pool.d/www.conf
+  - sudo cat /etc/php/7.1/fpm/pool.d/www.conf
   # restart Nnginx and PHP-FPM services
   - sudo service php7.1-fpm restart
   - sudo service nginx restart
@@ -116,3 +120,4 @@ script:
   - codecept run functional -vvv
   - codecept run acceptance
   - sudo cat $WP_ROOT_FOLDER/wp-content/debug.log
+  - sudo cat /var/log/php7.1-fpm.log
