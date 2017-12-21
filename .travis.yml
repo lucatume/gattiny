@@ -97,6 +97,7 @@ install:
   - export DATE_UPLOADS_FOLDER=$WP_ROOT_FOLDER/wp-content/uploads/$(date +%Y)/$(date +%m)
   - sudo mkdir -p $DATE_UPLOADS_FOLDER
   - sudo chmod -R 777 $DATE_UPLOADS_FOLDER
+  - ls -la $DATE_UPLOADS_FOLDER
   # get back to the build folder
   - cd $TRAVIS_BUILD_DIR
   # copy the Nginx configuration file to the available sites
