@@ -101,7 +101,6 @@ before_script:
   - codecept build
 
 script:
-  - curl $WP_DOMAIN
 #  - codecept run integration
   - codecept run functional -vvv
 #  - codecept run acceptance
