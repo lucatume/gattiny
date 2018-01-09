@@ -97,6 +97,6 @@ before_script:
   - codecept build
 
 script:
-#  - codecept run integration
+  - codecept run integration
   - codecept run functional -vvv
-#  - codecept run acceptance
+  - codecept run acceptance
