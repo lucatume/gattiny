@@ -31,8 +31,6 @@ addons:
       - imagemagick
       - libjpeg-dev
       - libpng12-dev
-      - realpath
-      - nginx
   hosts:
     - wp.localhost
 
@@ -73,8 +71,6 @@ before_install:
 
 install:
   - composer install
-  # install Nginx (credits to https://github.com/tburry/travis-nginx-test)
-  #  - travis/install-nginx.sh
   # install WordPress
   - cd $WP_ROOT_FOLDER
   - wp core download --version=$WP_VERSION
