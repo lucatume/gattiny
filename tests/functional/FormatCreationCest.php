@@ -128,7 +128,11 @@ PHP;
 			} else {
 				$originalFrame->resizeImage( $w, $h, Imagick::FILTER_BOX, 1 );
 			}
-			$comparison = $originalFrame->compareImages( $resizedFrame, Imagick::METRIC_ROOTMEANSQUAREDERROR );
+			try {
+				$comparison = $originalFrame->compareImages( $resizedFrame, Imagick::METRIC_ROOTMEANSQUAREDERROR );
+			} catch ( ImagickException $e ) {
+				$I->fail( "Imagick failed to compare the images for size '{$slug}'; the issue was {$e->getMessage()}" );
+			}
 			$I->assertTrue( 0 <= $comparison[1] && $comparison[1] <= 0.5, "The {$slug} format image is not comparable" );
 		}
 	}
