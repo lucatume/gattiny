@@ -1,6 +1,8 @@
 <?php
 
 
+use Codeception\Exception\ModuleException;
+
 class FormatCreationCest {
 
 	protected $gif = 'images/kitten-animated.gif';
@@ -35,7 +37,11 @@ function testRemoveDefaultSizes( array \$sizes ) {
 }
 PHP;
 
-		$I->haveTheme( 'test', "echo 'Hello there!';", $functionsCode );
+		try {
+			$I->haveTheme( 'test', "echo 'Hello there!';", $functionsCode );
+		} catch ( ModuleException $e ) {
+			$I->fail( "It was not possible to have test theme; issue is {$e->getMessage()}" );
+		}
 		$I->useTheme( 'test' );
 	}
 
@@ -109,6 +115,9 @@ PHP;
 			if ( $slug === 'full' ) {
 				continue;
 			}
+
+			$isCroppingFormat = in_array( $slug, [ 'thumbnail', 'custom-format-one' ] );
+
 			$suffix           = '' !== $size ? '-' . $size : '';
 			$file             = $this->uploads . DIRECTORY_SEPARATOR . basename( $this->gif, '.gif' ) . $suffix . '.gif';
 			$resizedCoalesced = ( new Imagick( $file ) )->coalesceImages();
@@ -116,14 +125,18 @@ PHP;
 			// we test just the first frame
 			$originalFrame = $originalCoalesced->getImage();
 			$resizedFrame  = $resizedCoalesced->getImage();
-			if ( in_array( $slug, [ 'thumbnail', 'custom-format-one' ] ) ) {
+			if ( $isCroppingFormat ) {
 				$originalFrame->resizeImage( $w, $h, Imagick::FILTER_BOX, 1, false );
 				$resizedWidth  = $originalFrame->getImageWidth();
 				$resizedHeight = $originalFrame->getImageHeight();
 				$newWidth      = $resizedWidth / 2;
 				$newHeight     = $resizedHeight / 2;
 				$originalFrame->cropimage( $newWidth, $newHeight, ( $resizedWidth - $newWidth ) / 2, ( $resizedHeight - $newHeight ) / 2 );
-				$originalFrame->scaleimage( $originalFrame->getImageWidth() * 4, $originalFrame->getImageHeight() * 4 );
+				try {
+					$originalFrame->scaleimage( $originalFrame->getImageWidth() * 4, $originalFrame->getImageHeight() * 4 );
+				} catch ( ImagickException $e ) {
+					$I->fail( "Imagick failed to scale the images for size '{$slug}'; the issue was {$e->getMessage()}" );
+				}
 				$originalFrame->setImagePage( $w, $h, 0, 0 );
 			} else {
 				$originalFrame->resizeImage( $w, $h, Imagick::FILTER_BOX, 1 );
