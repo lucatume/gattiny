@@ -40,11 +40,11 @@ PHP;
 	}
 
 	public function _after( FunctionalTester $I ) {
-				$I->deleteDir( $this->uploads );
+		$I->deleteDir( $this->uploads );
 	}
 
 	public function _failed( FunctionalTester $I ) {
-				$I->deleteDir( $this->uploads );
+		$I->deleteDir( $this->uploads );
 	}
 
 	/**
@@ -116,7 +116,7 @@ PHP;
 			// we test just the first frame
 			$originalFrame = $originalCoalesced->getImage();
 			$resizedFrame  = $resizedCoalesced->getImage();
-			if ( $slug === 'thumbnail' ) {
+			if ( in_array( $slug, [ 'thumbnail', 'custom-format-one' ] ) ) {
 				$originalFrame->resizeImage( $w, $h, Imagick::FILTER_BOX, 1, false );
 				$resizedWidth  = $originalFrame->getImageWidth();
 				$resizedHeight = $originalFrame->getImageHeight();
