@@ -21,9 +21,18 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 		}
 
 		foreach ( $sizes as $size => $data ) {
-			$resized = $this->resize( $data['width'], $data['height'], $data['crop'] );
+			$originalHeight = $originalSize['height'];
+			$newHeight      = $data['height'];
+			$originalWidth  = $originalSize['width'];
+			$newWidth       = $data['width'];
 
-			$duplicate = ( ( $originalSize['width'] == $data['width'] ) && ( $originalSize['height'] == $data['height'] ) );
+			if ( $originalHeight <= $newHeight || $originalWidth <= $newWidth ) {
+				continue;
+			}
+
+			$resized = $this->resize( $newWidth, $newHeight, $data['crop'] );
+
+			$duplicate = ( ( $originalWidth == $newWidth ) && ( $originalHeight == $newHeight ) );
 
 			if ( ! is_wp_error( $resized ) && ! $duplicate ) {
 				$resized = $this->_save( $this->image );

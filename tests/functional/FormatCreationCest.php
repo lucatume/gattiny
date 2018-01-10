@@ -5,19 +5,16 @@ use Codeception\Exception\ModuleException;
 
 class FormatCreationCest {
 
-	protected $gif = 'images/kitten-animated.gif';
+	protected $gif = 'images/medium.gif';
 
 	protected $frameCount = 2;
-
-	protected $jpg = 'images/kitten-image.jpg';
 
 	protected $uploads;
 
 	protected $sizeMap = [
-		'custom-format-one'  => '100x130',
+		'custom-format-one'  => '100x80',
 		'custom-format-two ' => '133x75',
 		'thumbnail'          => '150x150',
-		'medium'             => '300x169',
 	];
 
 	public function _before( FunctionalTester $I ) {
@@ -25,8 +22,8 @@ class FormatCreationCest {
 		$I->deleteDir( $this->uploads );
 
 		$functionsCode = <<< PHP
-add_image_size( 'custom-format-one', 100, 130, true );
-add_image_size( 'custom-format-two', 133, 345, false );
+add_image_size( 'custom-format-one', 100, 80, true );
+add_image_size( 'custom-format-two', 133, 200, false );
 
 add_filter( 'intermediate_image_sizes_advanced', 'testRemoveDefaultSizes' );
 function testRemoveDefaultSizes( array \$sizes ) {
