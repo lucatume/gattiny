@@ -6,7 +6,7 @@ include_once ABSPATH . '/wp-includes/class-wp-image-editor-imagick.php';
 class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 
 	public static function test( $args = [] ) {
-		return ! empty( $args['mime_type'] ) && $args['mime_type'] === 'image/gif';
+		return parent::test( $args ) && ! empty( $args['mime_type'] ) && $args['mime_type'] === 'image/gif';
 	}
 
 	public function multi_resize( $sizes ) {
@@ -81,13 +81,6 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 
 	}
 
-	/**
-	 * @param \Imagick $image
-	 * @param string   $filename
-	 * @param string   $mime_type
-	 *
-	 * @return array|\WP_Error
-	 */
 	public function _save( $image, $filename = null, $mime_type = null ) {
 		if ( $this->image->count() === 1 ) {
 			return parent::_save( $image, $filename, $mime_type );
