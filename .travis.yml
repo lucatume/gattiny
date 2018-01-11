@@ -99,8 +99,6 @@ before_script:
   - codecept build
 
 script:
-  # test that the site can be reached
-  - curl -vsf 'http://localhost:8080' &> /dev/stdout
   - codecept run integration
   - codecept run functional
   - codecept run acceptance
