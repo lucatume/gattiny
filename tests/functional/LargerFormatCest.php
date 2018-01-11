@@ -29,12 +29,15 @@ function testRemoveDefaultSizes( array \$sizes ) {
 }
 PHP;
 
+		$id        = uniqid( 'test', true );
+		$themeName = "test-theme-{$id}";
+
 		try {
-			$I->haveTheme( 'test', "echo 'Hello there!';", $functionsCode );
+			$I->haveTheme( $themeName, "echo 'Hello there!';", $functionsCode );
 		} catch ( ModuleException $e ) {
 			$I->fail( "It was not possible to have test theme; issue is {$e->getMessage()}" );
 		}
-		$I->useTheme( 'test' );
+		$I->useTheme( $themeName );
 	}
 
 	public function _after( FunctionalTester $I ) {
