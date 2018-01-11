@@ -25,12 +25,11 @@ class GifImageEditingCest {
 	 * @test
 	 */
 	public function should_not_allow_editing_gif_images_in_word_press( JsTester $I ) {
+		$I->haveAttachmentInDatabase( codecept_data_dir( $this->gif ),'yesterday',[],['thumbnail' => [70,70]]);
 		$I->loginAsAdmin();
-		$I->amOnAdminPage( 'media-new.php' );
-		$I->attachFile( 'input[name="async-upload"]', $this->gif );
-		$I->click( 'input[name="html-upload"]' );
 		$I->amOnAdminPage( '/upload.php' );
 		$I->click( '.thumbnail img[src$=".gif"]' );
+
 
 		$I->seeElement( '.edit-attachment-frame' );
 		$I->seeElement( '.edit-attachment-frame .attachment-actions' );

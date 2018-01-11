@@ -4,6 +4,7 @@ modules:
         - \Helper\Js
         - WPWebDriver
         - WPFilesystem
+        - WPDb
     config:
         WPWebDriver:
             url: '%WP_URL%'
@@ -15,3 +16,12 @@ modules:
             window_size: 1024x768
         WPFilesystem:
             wpRootFolder: %WP_ROOT_FOLDER%
+        WPDb:
+            dsn: 'mysql:host=%DB_HOST%;dbname=%DB_NAME%'
+            user: %DB_USER%
+            password: %DB_PASSWORD%
+            dump: tests/_data/dump.sql
+            populate: true
+            cleanup: true
+            url: '%WP_URL%'
+            tablePrefix: %TABLE_PREFIX%
