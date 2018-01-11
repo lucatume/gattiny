@@ -27,7 +27,7 @@ class gattiny_System {
 		deactivate_plugins( plugin_basename( $this->mainFile ) );
 		?>
         <div class="notice notice-error gattiny_Notice gattiny_Notice--unsupported">
-            <p><?php _e( 'Gattiny is not supported by your server: the Imagick extension is missing.', 'gattiny' ); ?></p>
+            <p><?php _e( 'Gattiny is not supported by your server: the Imagick extension is missing or its version is not at least 2.0.0.', 'gattiny' ); ?></p>
         </div>
 		<?php
 	}

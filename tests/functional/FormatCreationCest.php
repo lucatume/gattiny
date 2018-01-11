@@ -122,22 +122,17 @@ PHP;
 			// we test just the first frame
 			$originalFrame = $originalCoalesced->getImage();
 			$resizedFrame  = $resizedCoalesced->getImage();
+
 			if ( $isCroppingFormat ) {
-				$originalFrame->resizeImage( $w, $h, Imagick::FILTER_BOX, 1, false );
-				$resizedWidth  = $originalFrame->getImageWidth();
-				$resizedHeight = $originalFrame->getImageHeight();
-				$newWidth      = $resizedWidth / 2;
-				$newHeight     = $resizedHeight / 2;
-				$originalFrame->cropimage( $newWidth, $newHeight, ( $resizedWidth - $newWidth ) / 2, ( $resizedHeight - $newHeight ) / 2 );
 				try {
-					$originalFrame->scaleimage( $originalFrame->getImageWidth() * 4, $originalFrame->getImageHeight() * 4 );
+					$originalFrame->cropThumbnailImage( $w, $h );
 				} catch ( ImagickException $e ) {
-					$I->fail( "Imagick failed to scale the images for size '{$slug}'; the issue was {$e->getMessage()}" );
+					$I->fail( "Imagick failed to crop the images for size '{$slug}'; the issue was {$e->getMessage()}" );
 				}
-				$originalFrame->setImagePage( $w, $h, 0, 0 );
 			} else {
 				$originalFrame->resizeImage( $w, $h, Imagick::FILTER_BOX, 1 );
 			}
+
 			try {
 				$comparison = $originalFrame->compareImages( $resizedFrame, Imagick::METRIC_ROOTMEANSQUAREDERROR );
 			} catch ( ImagickException $e ) {

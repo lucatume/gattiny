@@ -6,7 +6,10 @@ include_once ABSPATH . '/wp-includes/class-wp-image-editor-imagick.php';
 class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 
 	public static function test( $args = [] ) {
-		return parent::test( $args ) && ! empty( $args['mime_type'] ) && $args['mime_type'] === 'image/gif';
+		$mimeTypeIsGif      = ! empty( $args['mime_type'] ) && $args['mime_type'] === 'image/gif';
+		$hasRequiredMethods = method_exists( 'Imagick', 'cropThumbnailImage' );
+
+		return parent::test( $args ) && $mimeTypeIsGif && $hasRequiredMethods;
 	}
 
 	public function multi_resize( $sizes ) {
