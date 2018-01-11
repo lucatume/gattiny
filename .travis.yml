@@ -77,7 +77,7 @@ install:
   # update WordPress database to avoid prompts
   - wp core update-db
   # link the plugin code in the WordPress installation
-  - cp -r  $TRAVIS_BUILD_DIR $TRAVIS_BUILD_DIR/www/wp-content/plugins/gattiny
+  - ln -s  $TRAVIS_BUILD_DIR $TRAVIS_BUILD_DIR/www/wp-content/plugins/gattiny
   - ls -la $TRAVIS_BUILD_DIR/www/wp-content/plugins
   # activate the plugin on the site
   - wp plugin deactivate $(wp plugin list --status=active --field=name)
