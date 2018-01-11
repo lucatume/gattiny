@@ -70,14 +70,7 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 					$this->image->resizeImage( $max_w, 0, Imagick::FILTER_BOX, 1, false );
 					$this->update_size( $max_w, $this->image->getImageHeight() );
 				} else {
-					$this->image->resizeImage( $max_w, $max_h, Imagick::FILTER_BOX, 1, false );
-					$resizedWidth  = $this->image->getImageWidth();
-					$resizedHeight = $this->image->getImageHeight();
-					$newWidth      = $resizedWidth / 2;
-					$newHeight     = $resizedHeight / 2;
-					$this->image->cropimage( $newWidth, $newHeight, ( $resizedWidth - $newWidth ) / 2, ( $resizedHeight - $newHeight ) / 2 );
-					$this->image->scaleimage( $this->image->getImageWidth() * 4, $this->image->getImageHeight() * 4 );
-					$this->image->setImagePage( $max_w, $max_h, 0, 0 );
+					$this->image->cropThumbnailImage( $max_w, $max_h );
 					$this->update_size( $max_w, $max_h );
 				}
 			} while ( $this->image->nextImage() );
