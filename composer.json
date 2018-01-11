@@ -15,7 +15,8 @@
     },
     "require-dev": {
         "lucatume/wp-browser": "^1.19",
-        "vlucas/phpdotenv": "^2.4"
+        "vlucas/phpdotenv": "^2.4",
+        "site5/phantoman": "^2.0"
     },
     "autoload": {
         "psr-0": {

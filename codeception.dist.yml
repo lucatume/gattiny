@@ -10,3 +10,11 @@ settings:
     memory_limit: 1024M
 params:
   - .env
+extensions:
+    enabled:
+        - Codeception\Extension\Phantoman
+    config:
+        Codeception\Extension\Phantoman:
+            path: '%PHANTOMJS_BIN%'
+            port: 4445
+            suites: ['js']
