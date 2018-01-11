@@ -91,12 +91,12 @@ install:
   - travis/install-nginx.sh
 
 before_script:
-  # build Codeception modules
-  - codecept build
   # set the correct path to phantomjs bin in the .env file
   - sed -i "s#{{phantomjs}}#$(which phantomjs)#" $TRAVIS_BUILD_DIR/.env
   # set the correct path to WP root folder bin in the .env file
   - sed -i "s#{{wp_root_folder}}#$TRAVIS_BUILD_DIR/www#" $TRAVIS_BUILD_DIR/.env
+  # build Codeception modules
+  - codecept build
 
 script:
   # test that the site can be reached
