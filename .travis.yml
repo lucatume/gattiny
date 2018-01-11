@@ -102,3 +102,4 @@ script:
   - codecept run integration
   - codecept run functional
   - codecept run acceptance
+  - codecept run js
