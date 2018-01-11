@@ -104,6 +104,6 @@ script:
   - codecept run integration
   - codecept run functional
   - codecept run acceptance
-  - codecept run js -vvv
+  - codecept run js
   # let's check for errors here
   - cat /tmp/error.log
