@@ -25,18 +25,15 @@ cache:
 
 addons:
   apt:
-    sources:
-      - sourceline: 'ppa:ondrej/php'
     packages:
       - imagemagick
       - libjpeg-dev
       - libpng12-dev
-  hosts:
-    - wp.localhost
+      - nginx
+      - realpath
 
 env:
   global:
-    - WP_ROOT_FOLDER="/tmp/wordpress"
     - WP_URL="http://localhost:8080"
     - WP_DOMAIN="localhost:8080"
     - DB_NAME="wp"
@@ -53,7 +50,7 @@ before_install:
   - mysql -e "create database IF NOT EXISTS $DB_NAME;" -uroot
   - mysql -e "create database IF NOT EXISTS $TEST_DB_NAME;" -uroot
   # set up folders
-  - mkdir -p $WP_ROOT_FOLDER
+  - mkdir -p $TRAVIS_BUILD_DIR/www
   - mkdir tools
   # install wp-cli in the `tools` folder
   - wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -P $(pwd)/tools/
@@ -72,7 +69,7 @@ before_install:
 install:
   - composer install
   # install WordPress
-  - cd $WP_ROOT_FOLDER
+  - cd $TRAVIS_BUILD_DIR/www
   - wp core download --version=$WP_VERSION
   - wp config create --dbname="$DB_NAME" --dbuser="root" --dbpass="" --dbhost="127.0.0.1" --dbprefix="$WP_TABLE_PREFIX"
   - wp core install --url="$WP_URL" --title="Test" --admin_user="$WP_ADMIN_USERNAME" --admin_password="$WP_ADMIN_PASSWORD" --admin_email="admin@wp.dev" --skip-email
@@ -80,26 +77,33 @@ install:
   # update WordPress database to avoid prompts
   - wp core update-db
   # link the plugin code in the WordPress installation
-  - cp -r  $TRAVIS_BUILD_DIR $WP_ROOT_FOLDER/wp-content/plugins/gattiny
-  - ls -la $WP_ROOT_FOLDER/wp-content/plugins
+  - cp -r  $TRAVIS_BUILD_DIR $TRAVIS_BUILD_DIR/www/wp-content/plugins/gattiny
+  - ls -la $TRAVIS_BUILD_DIR/www/wp-content/plugins
   # activate the plugin on the site
   - wp plugin deactivate $(wp plugin list --status=active --field=name)
   - wp plugin activate gattiny
-  # export a dump of the just installed database to the _data folder
+  # export a dump of the just installed database to the _data folder to provide tests with a starting fixture
   - wp db export $TRAVIS_BUILD_DIR/tests/_data/dump.sql
-  # start the server on port :8080
-  - wp server --host=0.0.0.0 > /dev/null 2>&1 &
   # get back to the build folder
   - cd $TRAVIS_BUILD_DIR
+  # install and start Nginx at localhost:8080
+  # credit to https://github.com/tburry/travis-nginx-test
+  - travis/install-nginx.sh
 
 before_script:
   # build Codeception modules
   - codecept build
-  # set the correct path to phantomjs bin
+  # set the correct path to phantomjs bin in the .env file
   - sed -i "s#{{phantomjs}}#$(which phantomjs)#" $TRAVIS_BUILD_DIR/.env
+  # set the correct path to WP root folder bin in the .env file
+  - sed -i "s#{{wp_root_folder}}#$TRAVIS_BUILD_DIR/www#" $TRAVIS_BUILD_DIR/.env
 
 script:
+  # test that the site can be reached
+  - curl -vsf 'http://localhost:8080' &> /dev/stdout
   - codecept run integration
   - codecept run functional
   - codecept run acceptance
   - codecept run js -vvv
+  # let's check for errors here
+  - cat /tmp/error.log
