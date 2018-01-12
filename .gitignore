@@ -1,7 +1,15 @@
 # Created by .ignore support plugin (hsz.mobi)
 ### Composer template
 composer.phar
-/vendor/
+
+# ignore the vendor folder
+vendor
+# but do keep the dependencies the plugin needs
+!vendor/autoload*.php
+!vendor/composer/autoload_*.php
+!vendor/composer/ClassLoader52.php
+!vendor/lucatume/di52/src
+
 
 # Commit your application's lock file http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file
 # You may choose to ignore a library lock file http://getcomposer.org/doc/02-libraries.md#lock-file
