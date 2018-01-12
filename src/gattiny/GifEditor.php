@@ -17,6 +17,22 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 		$original     = $this->image;
 		$originalSize = $this->size;
 
+		/**
+		 * Filters the upper bound that will be used to resize images.
+		 *
+		 * Resizing animated images is a resource intensive process so we set an upper bound
+		 * so that images will be resized, while keeping the size ratio, to an image contained
+		 * within those bounds. E.g. given an 800x600 original image, an upper bound of 300 (px) and
+		 * a size of 1200x600 then the image will be resize to 300x150 (same 2:1 ratio as original).
+		 * Cropping will follow the same principle but the cropped format ratio will be used.
+		 *
+		 * @param int $upperBound A pixel value.
+		 */
+		$upperBound = apply_filters( 'gattiny.editor.image-upper-bound', get_option( 'gattiny-image-upper-bound' ) );
+		$upperBound = is_numeric($upperBound) && $upperBound > 0
+			? (int)$upperBound
+			: 600;
+
 		$testImage = $this->image->coalesceImages();
 
 		if ( $testImage->count() === 1 ) {
@@ -24,16 +40,31 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 		}
 
 		foreach ( $sizes as $size => $data ) {
-			$originalHeight = $originalSize['height'];
-			$newHeight      = $data['height'];
-			$originalWidth  = $originalSize['width'];
-			$newWidth       = $data['width'];
+			$originalHeight = (int) $originalSize['height'];
+			$newHeight      = (int) $data['height'];
+			$originalWidth  = (int) $originalSize['width'];
+			$newWidth       = (int) $data['width'];
+			$crop = (bool)$data['crop'];
 
-			if ( $originalHeight <= $newHeight || $originalWidth <= $newWidth ) {
-				continue;
+			if ( $newWidth > $upperBound || $newHeight > $upperBound ) {
+				if ( $crop ) {
+					$ratio = $newWidth / $newHeight;
+				} else {
+					$ratio = $originalWidth / $originalHeight;
+				}
+
+				if ( $ratio > 1 ) {
+					// landscape
+					$newWidth  = $upperBound;
+					$newHeight = $upperBound / $ratio;
+				} else {
+					// portrait or square
+					$newWidth  = $upperBound / $ratio;
+					$newHeight = $upperBound;
+				}
 			}
 
-			$resized = $this->resize( $newWidth, $newHeight, $data['crop'] );
+			$resized = $this->resize( $newWidth, $newHeight, $crop );
 
 			$duplicate = ( ( $originalWidth == $newWidth ) && ( $originalHeight == $newHeight ) );
 
