@@ -44,7 +44,7 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 			$newHeight      = (int) $data['height'];
 			$originalWidth  = (int) $originalSize['width'];
 			$newWidth       = (int) $data['width'];
-			$crop = (bool)$data['crop'];
+			$crop           = (bool) $data['crop'];
 
 			if ( $newWidth > $upperBound || $newHeight > $upperBound ) {
 				if ( $crop ) {
@@ -62,6 +62,10 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 					$newWidth  = $upperBound / $ratio;
 					$newHeight = $upperBound;
 				}
+			}
+
+			if ( $newWidth > $originalWidth || $newHeight > $originalHeight ) {
+				continue;
 			}
 
 			$resized = $this->resize( $newWidth, $newHeight, $crop );

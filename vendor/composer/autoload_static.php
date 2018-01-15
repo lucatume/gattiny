@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit14b5a2cdb9e44c11aa15f16cfe1c77a5
+class ComposerStaticInit3dd0cba64002bb73f2dbea6a3a0bc4d7
 {
     public static $prefixesPsr0 = array (
         'x' => 
@@ -30,10 +30,25 @@ class ComposerStaticInit14b5a2cdb9e44c11aa15f16cfe1c77a5
         ),
     );
 
+    public static $classMap = array (
+        'gattiny_GifEditor' => __DIR__ . '/../..' . '/src/gattiny/GifEditor.php',
+        'gattiny_ImageEditors' => __DIR__ . '/../..' . '/src/gattiny/ImageEditors.php',
+        'gattiny_MediaScripts' => __DIR__ . '/../..' . '/src/gattiny/MediaScripts.php',
+        'gattiny_System' => __DIR__ . '/../..' . '/src/gattiny/System.php',
+        'tad_DI52_Container' => __DIR__ . '/..' . '/lucatume/di52/src/tad/DI52/Container.php',
+        'tad_DI52_ContainerInterface' => __DIR__ . '/..' . '/lucatume/di52/src/tad/DI52/ContainerInterface.php',
+        'tad_DI52_ProtectedValue' => __DIR__ . '/..' . '/lucatume/di52/src/tad/DI52/ProtectedValue.php',
+        'tad_DI52_ServiceProvider' => __DIR__ . '/..' . '/lucatume/di52/src/tad/DI52/ServiceProvider.php',
+        'tad_DI52_ServiceProviderInterface' => __DIR__ . '/..' . '/lucatume/di52/src/tad/DI52/ServiceProviderInterface.php',
+        'xrstf\\Composer52\\AutoloadGenerator' => __DIR__ . '/..' . '/xrstf/composer-php52/lib/xrstf/Composer52/AutoloadGenerator.php',
+        'xrstf\\Composer52\\Generator' => __DIR__ . '/..' . '/xrstf/composer-php52/lib/xrstf/Composer52/Generator.php',
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixesPsr0 = ComposerStaticInit14b5a2cdb9e44c11aa15f16cfe1c77a5::$prefixesPsr0;
+            $loader->prefixesPsr0 = ComposerStaticInit3dd0cba64002bb73f2dbea6a3a0bc4d7::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit3dd0cba64002bb73f2dbea6a3a0bc4d7::$classMap;
 
         }, null, ClassLoader::class);
     }
