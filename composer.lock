@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "c62df6778d55919afbe8c563420aaf06",
+  "content-hash": "9e7f44268fc60547e8919bfd3b295a4f",
     "packages": [
         {
             "name": "lucatume/di52",
@@ -1283,6 +1283,45 @@
             "time": "2017-06-01T09:49:40+00:00"
         },
         {
+          "name": "lucatume/function-mocker-le",
+          "version": "1.0.1",
+          "source": {
+            "type": "git",
+            "url": "https://github.com/lucatume/function-mocker-le.git",
+            "reference": "20e12ae2e6350c5b11a6bdbe763c749f7f88603e"
+          },
+          "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/lucatume/function-mocker-le/zipball/20e12ae2e6350c5b11a6bdbe763c749f7f88603e",
+            "reference": "20e12ae2e6350c5b11a6bdbe763c749f7f88603e",
+            "shasum": ""
+          },
+          "require": {
+            "php": ">=5.4"
+          },
+          "require-dev": {
+            "phpunit/phpunit": "^6.3"
+          },
+          "type": "library",
+          "autoload": {
+            "files": [
+              "src/function-mocker-le.php"
+            ]
+          },
+          "notification-url": "https://packagist.org/downloads/",
+          "license": [
+            "GPL-2.0"
+          ],
+          "authors": [
+            {
+              "name": "theAverageDev (Luca Tumedei)",
+              "email": "luca@theaveragedev.com"
+            }
+          ],
+          "description": "A lightweight function mocking solution.",
+          "time": "2017-09-02T10:37:47+00:00"
+        },
+      {
             "name": "lucatume/wp-browser",
             "version": "1.21.26",
             "source": {

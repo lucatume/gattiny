@@ -1,0 +1,13 @@
+@mixin circle {
+  content: '';
+  display: inline-block;
+  border-radius: 50%;
+  height: 15px;
+  width: 15px;
+  position: relative;
+  top: 3px;
+}
+
+.interline + .interline {
+  margin-top: 1em;
+}

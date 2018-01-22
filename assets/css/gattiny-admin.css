@@ -1,0 +1,41 @@
+/**
+Gattiny style sheet
+ */
+.interline + .interline {
+  margin-top: 1em; }
+
+.wp-admin .gattiny .load-low:before {
+  content: '';
+  display: inline-block;
+  border-radius: 50%;
+  height: 15px;
+  width: 15px;
+  position: relative;
+  top: 3px;
+  background-color: forestgreen; }
+.wp-admin .gattiny .load-medium:before {
+  content: '';
+  display: inline-block;
+  border-radius: 50%;
+  height: 15px;
+  width: 15px;
+  position: relative;
+  top: 3px;
+  background-color: orange; }
+.wp-admin .gattiny .load-high:before {
+  content: '';
+  display: inline-block;
+  border-radius: 50%;
+  height: 15px;
+  width: 15px;
+  position: relative;
+  top: 3px;
+  background-color: indianred; }
+
+/*
+Overrides
+ */
+.wp-admin .gattiny .form-table td fieldset label {
+  display: block; }
+
+/*# sourceMappingURL=gattiny-admin.css.map */

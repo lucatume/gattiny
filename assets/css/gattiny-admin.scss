@@ -1,0 +1,34 @@
+/**
+Gattiny style sheet
+ */
+@import "common";
+
+.wp-admin .gattiny {
+  .load-low {
+    &:before {
+      @include circle;
+      background-color: forestgreen;
+    }
+  }
+  .load-medium {
+    &:before {
+      @include circle;
+      background-color: orange;
+    }
+  }
+  .load-high {
+    &:before {
+      @include circle;
+      background-color: indianred;
+    }
+  }
+}
+
+/*
+Overrides
+ */
+.wp-admin .gattiny {
+  .form-table td fieldset label {
+    display: block
+  }
+}
