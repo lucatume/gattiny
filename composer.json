@@ -16,8 +16,9 @@
     "require-dev": {
         "lucatume/wp-browser": "^1.21.25",
         "vlucas/phpdotenv": "^2.4",
-      "site5/phantoman": "^2.0",
-      "lucatume/function-mocker-le": "^1.0"
+        "site5/phantoman": "^2.0",
+        "lucatume/function-mocker-le": "^1.0",
+        "wp-cli/checksum-command": "1.0.5"
     },
     "autoload": {
         "psr-0": {
