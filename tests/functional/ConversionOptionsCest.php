@@ -67,9 +67,9 @@ PHP;
 		$I->amInPath( $this->uploads );
 		$I->seeFileFound( 'medium-200x112' . '.gif', $this->uploads );
 		$I->seeFileFound( 'medium-100x100' . '.gif', $this->uploads );
-		$I->seeFileFound( 'medium-600x600' . '.gif', $this->uploads );
+		$I->dontSeeFileFound( 'medium-600x600' . '.gif', $this->uploads );
 		$I->seeFileFound( 'medium.gif', $this->uploads );
-		$I->assertCount( 4, glob( $this->uploads . '/medium*.gif' ) );
+		$I->assertCount( 3, glob( $this->uploads . '/medium*.gif' ) );
 	}
 
 	/**

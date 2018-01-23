@@ -47,6 +47,10 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 				continue;
 			}
 
+			if ( ! ( image_resize_dimensions( $this->size['width'], $this->size['height'], $newWidth, $newHeight, $crop ) ) ) {
+				return new WP_Error( 'error_getting_dimensions', __( 'Could not calculate resized image dimensions' ) );
+			}
+
 			$resized = $this->resize( $newWidth, $newHeight, $crop );
 
 			$duplicate = ( ( $originalWidth == $newWidth ) && ( $originalHeight == $newHeight ) );

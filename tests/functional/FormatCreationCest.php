@@ -13,7 +13,7 @@ class FormatCreationCest {
 
 	protected $sizeMap = [
 		'custom-format-one'  => '100x80',
-		'custom-format-two ' => '133x75',
+		'custom-format-two ' => '133x74',
 		'thumbnail'          => '150x150',
 	];
 
@@ -28,6 +28,7 @@ add_image_size( 'custom-format-two', 133, 200, false );
 add_filter( 'intermediate_image_sizes_advanced', 'testRemoveDefaultSizes' );
 function testRemoveDefaultSizes( array \$sizes ) {
 	unset( \$sizes['medium_large']);
+	unset( \$sizes['medium']);
 	unset( \$sizes['large']);
  
 	return \$sizes;
@@ -71,6 +72,7 @@ PHP;
 			$suffix = '' !== $size ? '-' . $size : '';
 			$I->seeFileFound( basename( $this->gif, '.gif' ) . $suffix . '.gif', $this->uploads );
 		}
+		$I->assertCount( 4, glob( $this->uploads . '/medium*.gif' ) );
 	}
 
 	/**
