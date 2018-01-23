@@ -2,10 +2,28 @@
 
 class gattiny_ImageSizes {
 
+	const OPTION = 'gattiny-imageSizes';
+	const DO_NOT_CONVERT = 'do-not-convert';
+	const CONVERT_ANIMATED = 'convert-animated';
+	const CONVERT_STILL = 'convert-still';
+
 	/**
 	 * @var array
 	 */
 	protected $imageSizes;
+
+	public static function shouldNotResize( $size ) {
+		$option = get_option( self::OPTION, array() );
+
+		return ( isset( $option[ $size ] ) && $option[ $size ] === self::DO_NOT_CONVERT );
+	}
+
+	public static function shouldResizeAnimated( $size ) {
+		$option = get_option( self::OPTION, array() );
+
+		return ( isset( $option[ $size ] ) && $option[ $size ] === self::CONVERT_ANIMATED )
+		       || ! isset( $option[ $size ] );
+	}
 
 	/**
 	 * @return gattiny_ImageSize[]
@@ -36,14 +54,14 @@ class gattiny_ImageSizes {
 
 		foreach ( get_intermediate_image_sizes() as $size ) {
 			if ( in_array( $size, array( 'thumbnail', 'medium', 'medium_large', 'large' ) ) ) {
-				$sizes[ $size ]['width'] = get_option( "{$size}_size_w" );
+				$sizes[ $size ]['width']  = get_option( "{$size}_size_w" );
 				$sizes[ $size ]['height'] = get_option( "{$size}_size_h" );
-				$sizes[ $size ]['crop'] = (bool) get_option( "{$size}_crop" );
+				$sizes[ $size ]['crop']   = (bool) get_option( "{$size}_crop" );
 			} elseif ( isset( $_wp_additional_image_sizes[ $size ] ) ) {
 				$sizes[ $size ] = array(
-					'width' => $_wp_additional_image_sizes[ $size ]['width'],
+					'width'  => $_wp_additional_image_sizes[ $size ]['width'],
 					'height' => $_wp_additional_image_sizes[ $size ]['height'],
-					'crop' => $_wp_additional_image_sizes[ $size ]['crop'],
+					'crop'   => $_wp_additional_image_sizes[ $size ]['crop'],
 				);
 			}
 		}

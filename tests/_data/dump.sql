@@ -112,9 +112,9 @@ LOCK TABLES `wp_options` WRITE;
 
 INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`)
 VALUES
-	(1,'siteurl','http://wptest.test','yes'),
-	(2,'home','http://wptest.test','yes'),
-	(3,'blogname','wptest','yes'),
+	(1,'siteurl','http://gattiny.local','yes'),
+	(2,'home','http://gattiny.local','yes'),
+	(3,'blogname','gattiny','yes'),
 	(4,'blogdescription','Just another WordPress site','yes'),
 	(5,'users_can_register','0','yes'),
 	(6,'admin_email','dev-email@flywheel.local','yes'),

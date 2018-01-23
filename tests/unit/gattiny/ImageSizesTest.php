@@ -141,4 +141,39 @@ class ImageSizesTest extends \Codeception\Test\Unit {
 		$this->assertEquals( false, $imageSizes->getImageHeight( 'not-existing' ) );
 		$this->assertEquals( false, $imageSizes->isImageCropping( 'not-existing' ) );
 	}
+
+	/**
+	 * It should return correct value to know if image should be resized
+	 *
+	 * @test
+	 */
+	public function should_return_correct_value_to_know_if_image_should_be_resized() {
+		defineFunction( 'get_option', function () {
+			return [ 'size' => 'do-not-convert' ];
+		} );
+
+		$this->assertTrue( ImageSizes::shouldNotResize( 'size' ) );
+		$this->assertFalse( ImageSizes::shouldResizeAnimated( 'size' ) );
+
+		defineFunction( 'get_option', function () {
+			return [];
+		} );
+
+		$this->assertFalse( ImageSizes::shouldNotResize( 'size' ) );
+		$this->assertTrue( ImageSizes::shouldResizeAnimated( 'size' ) );
+
+		defineFunction( 'get_option', function () {
+			return [ 'size' => 'convert-animated' ];
+		} );
+
+		$this->assertFalse( ImageSizes::shouldNotResize( 'size' ) );
+		$this->assertTrue( ImageSizes::shouldResizeAnimated( 'size' ) );
+
+		defineFunction( 'get_option', function () {
+			return [ 'size' => 'convert-still' ];
+		} );
+
+		$this->assertFalse( ImageSizes::shouldNotResize( 'size' ) );
+		$this->assertFalse( ImageSizes::shouldResizeAnimated( 'size' ) );
+	}
 }

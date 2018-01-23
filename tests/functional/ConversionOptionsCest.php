@@ -2,8 +2,9 @@
 
 
 use Codeception\Exception\ModuleException;
+use gattiny_ImageSizes as ImageSizes;
 
-class LargerFormatCest {
+class ConversionOptionsCest {
 
 	protected $uploads;
 
@@ -21,16 +22,15 @@ class LargerFormatCest {
 	}
 
 	/**
-	 * It should create upper bound images keeping ratio
+	 * It should convert images keeping animations if option for image size is not set
 	 *
 	 * @test
 	 */
-	public function should_create_upper_bound_images_keeping_ratio(FunctionalTester $I) {
+	public function should_convert_images_keeping_animations_if_option_for_image_size_is_not_set( FunctionalTester $I ) {
 		$functionsCode = <<< PHP
 add_image_size( 'smaller-not-cropping', 200, 200, false );
-add_image_size( 'smaller-cropping', 200, 200, true );
-add_image_size( 'larger-not-cropping', 1000, 1000, false );
-add_image_size( 'larger-cropping', 1000, 1000, true );
+add_image_size( 'smaller-cropping', 100, 100, true );
+add_image_size( 'larger-cropping', 600, 600, true );
 
 add_filter( 'intermediate_image_sizes_advanced', 'testRemoveDefaultSizes' );
 function testRemoveDefaultSizes( array \$sizes ) {
@@ -45,7 +45,8 @@ PHP;
 
 		$id        = uniqid( 'test', true );
 		$themeName = "test-theme-{$id}";
-		$image = 'images/large.gif';
+		$I->useTheme( $themeName );
+		$image = 'images/medium.gif'; // 500 x 281
 
 		try {
 			$I->haveTheme( $themeName, "echo 'Hello there!';", $functionsCode );
@@ -54,7 +55,7 @@ PHP;
 		}
 		$I->useTheme( $themeName );
 
-		$I->haveOptionInDatabase('gattiny-image-upper-bound', '300');
+		$I->haveOptionInDatabase( 'gattiny-image-upper-bound', '300' );
 
 		$I->loginAsAdmin();
 		$I->amOnAdminPage( 'media-new.php' );
@@ -64,24 +65,30 @@ PHP;
 		$I->seeResponseCodeIs( 200 );
 
 		$I->amInPath( $this->uploads );
-		$I->seeFileFound( basename( $image, '.gif' ) . '-200x125' . '.gif', $this->uploads );
-		$I->seeFileFound( basename( $image, '.gif' ) . '-200x200' . '.gif', $this->uploads );
-		$I->seeFileFound( basename( $image, '.gif' ) . '-300x188' . '.gif', $this->uploads );
-		$I->seeFileFound( basename( $image, '.gif' ) . '-300x300' . '.gif', $this->uploads );
-		$I->seeFileFound( 'large.gif', $this->uploads );
+		$I->seeFileFound( 'medium-200x112' . '.gif', $this->uploads );
+		$I->seeFileFound( 'medium-100x100' . '.gif', $this->uploads );
+		$I->seeFileFound( 'medium-600x600' . '.gif', $this->uploads );
+		$I->seeFileFound( 'medium.gif', $this->uploads );
+		$I->assertCount( 4, glob( $this->uploads . '/medium*.gif' ) );
 	}
 
 	/**
-	 * It should not create larger versions of smaller gif
+	 * It should not create converted versions according to options
 	 *
 	 * @test
 	 */
-	public function should_not_create_larger_versions_of_smaller_gif(FunctionalTester $I) {
+	public function should_not_create_converted_versions_according_to_options( FunctionalTester $I ) {
+		$option = ImageSizes::OPTION;
+		$I->haveOptionInDatabase( $option, [
+			'smaller-not-cropping' => ImageSizes::DO_NOT_CONVERT,
+			'smaller-cropping'     => ImageSizes::CONVERT_ANIMATED,
+			'almost-cropping'      => ImageSizes::CONVERT_STILL,
+		] );
+
 		$functionsCode = <<< PHP
 add_image_size( 'smaller-not-cropping', 200, 200, false );
-add_image_size( 'smaller-cropping', 200, 200, true );
-add_image_size( 'larger-not-cropping', 1000, 1000, false );
-add_image_size( 'larger-cropping', 1000, 1000, true );
+add_image_size( 'smaller-cropping', 100, 100, true );
+add_image_size( 'almost-cropping', 500, 200, true );
 
 add_filter( 'intermediate_image_sizes_advanced', 'testRemoveDefaultSizes' );
 function testRemoveDefaultSizes( array \$sizes ) {
@@ -96,7 +103,8 @@ PHP;
 
 		$id        = uniqid( 'test', true );
 		$themeName = "test-theme-{$id}";
-		$image = 'images/small.gif';
+		$I->useTheme( $themeName );
+		$image = 'images/medium.gif'; // 500 x 281
 
 		try {
 			$I->haveTheme( $themeName, "echo 'Hello there!';", $functionsCode );
@@ -105,7 +113,7 @@ PHP;
 		}
 		$I->useTheme( $themeName );
 
-		$I->haveOptionInDatabase('gattiny-image-upper-bound', '300');
+		$I->haveOptionInDatabase( 'gattiny-image-upper-bound', '300' );
 
 		$I->loginAsAdmin();
 		$I->amOnAdminPage( 'media-new.php' );
@@ -115,10 +123,14 @@ PHP;
 		$I->seeResponseCodeIs( 200 );
 
 		$I->amInPath( $this->uploads );
-		$I->dontSeeFileFound( basename( $image, '.gif' ) . '-200x200' . '.gif', $this->uploads );
-		$I->dontSeeFileFound( basename( $image, '.gif' ) . '-200x200' . '.gif', $this->uploads );
-		$I->dontSeeFileFound( basename( $image, '.gif' ) . '-300x300' . '.gif', $this->uploads );
-		$I->dontSeeFileFound( basename( $image, '.gif' ) . '-300x300' . '.gif', $this->uploads );
-		$I->seeFileFound( 'small.gif', $this->uploads );
+		$I->dontSeeFileFound( 'medium-200x112.gif', $this->uploads );
+		$I->seeFileFound( 'medium-100x100.gif', $this->uploads );
+		$images = ( new Imagick( $this->uploads . '/medium-100x100.gif' ) )->coalesceImages();
+		$I->assertEquals( 2, $images->count() );
+		$I->seeFileFound( 'medium-500x200.gif', $this->uploads );
+		$images = ( new Imagick( $this->uploads . '/medium-500x200.gif' ) )->coalesceImages();
+		$I->assertEquals( 1, $images->count() );
+		$I->seeFileFound( 'medium.gif', $this->uploads );
+		$I->assertCount( 3, glob( $this->uploads . '/medium*.gif' ) );
 	}
 }

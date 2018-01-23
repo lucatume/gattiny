@@ -2,8 +2,6 @@
 
 class gattiny_Settings_Page {
 
-	public $imageSizesOption = 'gattiny-imageSizes';
-
 	/**
 	 * @var string
 	 */
@@ -44,10 +42,10 @@ class gattiny_Settings_Page {
 	}
 
 	public function initSettings() {
-		register_setting( 'gattiny', $this->imageSizesOption );
+		register_setting( 'gattiny', gattiny_ImageSizes::OPTION );
 
 		add_settings_section(
-			$this->imageSizesOption,
+			gattiny_ImageSizes::OPTION,
 			__( 'Image sizes', 'gattiny' ),
 			array( $this, 'renderImageSizesSection' ),
 			$this->page
@@ -58,7 +56,7 @@ class gattiny_Settings_Page {
 			__( 'Decide how each image size conversion should be handled', 'gattiny' ),
 			array( $this, 'imageSizesCheckboxes' ),
 			$this->page,
-			$this->imageSizesOption
+			gattiny_ImageSizes::OPTION
 		);
 	}
 
@@ -77,12 +75,12 @@ class gattiny_Settings_Page {
 	}
 
 	public function imageSizesCheckboxes() {
-		$option = get_option( $this->imageSizesOption );
+		$option = get_option( gattiny_ImageSizes::OPTION );
 
 		$conversionOptions = array(
-			'convert-animated' => __( 'Convert preserving animations %s', 'gattiny' ),
-			'convert-still'    => __( 'Convert removing animations (default WordPress behaviour)', 'gattiny' ),
-			'do-not-convert'   => __( 'Do not convert', 'gattiny' ),
+			gattiny_ImageSizes::CONVERT_ANIMATED => __( 'Convert preserving animations %s', 'gattiny' ),
+			gattiny_ImageSizes::CONVERT_STILL    => __( 'Convert removing animations (default WordPress behaviour)', 'gattiny' ),
+			gattiny_ImageSizes::DO_NOT_CONVERT   => __( 'Do not convert', 'gattiny' ),
 		);
 
 		$lowThreshold    = $this->imageSizes->getLowThreshold();
@@ -112,10 +110,10 @@ class gattiny_Settings_Page {
 
 			foreach ( $conversionOptions as $slug => $label ) {
 				$fields[] = $this->templates->compile( 'radio', array(
-					'name'    => "{$this->imageSizesOption}[" . $name . ']',
+					'name'    => gattiny_ImageSizes::OPTION . '[' . $name . ']',
 					'checked' => $imageSizeOption === $slug,
 					'value'   => $slug,
-					'label'   => 'convert-animated' === $slug ? sprintf( $label, $loadElement ) : $label,
+					'label'   => gattiny_ImageSizes::CONVERT_ANIMATED === $slug ? sprintf( $label, $loadElement ) : $label,
 				) );
 			}
 

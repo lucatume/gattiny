@@ -5,7 +5,7 @@ include_once ABSPATH . '/wp-includes/class-wp-image-editor-imagick.php';
 
 class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 
-	public static function test( $args = [] ) {
+	public static function test( $args = array() ) {
 		$mimeTypeIsGif      = ! empty( $args['mime_type'] ) && $args['mime_type'] === 'image/gif';
 		$hasRequiredMethods = method_exists( 'Imagick', 'cropThumbnailImage' );
 
@@ -13,58 +13,37 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 	}
 
 	public function multi_resize( $sizes ) {
-		$metadata     = [];
+		$metadata     = array();
 		$original     = $this->image;
 		$originalSize = $this->size;
 
-		/**
-		 * Filters the upper bound that will be used to resize images.
-		 *
-		 * Resizing animated images is a resource intensive process so we set an upper bound
-		 * so that images will be resized, while keeping the size ratio, to an image contained
-		 * within those bounds. E.g. given an 800x600 original image, an upper bound of 300 (px) and
-		 * a size of 1200x600 then the image will be resize to 300x150 (same 2:1 ratio as original).
-		 * Cropping will follow the same principle but the cropped format ratio will be used.
-		 *
-		 * @param int $upperBound A pixel value.
-		 */
-		$upperBound = apply_filters( 'gattiny.editor.image-upper-bound', get_option( 'gattiny-image-upper-bound' ) );
-		$upperBound = is_numeric($upperBound) && $upperBound > 0
-			? (int)$upperBound
-			: 600;
-
 		$testImage = $this->image->coalesceImages();
 
-		if ( $testImage->count() === 1 ) {
+		$frameCount = method_exists( $testImage, 'count' ) ? $testImage->count() : $testImage->getNumberImages();
+
+		if ( $frameCount === 1 ) {
 			return parent::multi_resize( $sizes );
 		}
 
 		foreach ( $sizes as $size => $data ) {
+			if ( gattiny_ImageSizes::shouldNotResize( $size ) ) {
+				continue;
+			}
+
 			$originalHeight = (int) $originalSize['height'];
 			$newHeight      = (int) $data['height'];
 			$originalWidth  = (int) $originalSize['width'];
 			$newWidth       = (int) $data['width'];
 			$crop           = (bool) $data['crop'];
 
-			if ( $newWidth > $upperBound || $newHeight > $upperBound ) {
-				if ( $crop ) {
-					$ratio = $newWidth / $newHeight;
-				} else {
-					$ratio = $originalWidth / $originalHeight;
+			if ( ! gattiny_ImageSizes::shouldResizeAnimated( $size ) ) {
+				$this->size = $originalSize;
+				$resized = parent::resize( $newWidth, $newHeight, $crop );
+
+				if ( ! is_wp_error( $resized ) && $resized ) {
+					$metadata[ $size ] = parent::_save( $this->image );
 				}
 
-				if ( $ratio > 1 ) {
-					// landscape
-					$newWidth  = $upperBound;
-					$newHeight = $upperBound / $ratio;
-				} else {
-					// portrait or square
-					$newWidth  = $upperBound / $ratio;
-					$newHeight = $upperBound;
-				}
-			}
-
-			if ( $newWidth > $originalWidth || $newHeight > $originalHeight ) {
 				continue;
 			}
 
@@ -96,7 +75,9 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 	public function resize( $max_w, $max_h, $crop = false ) {
 		$testImage = $this->image->coalesceImages();
 
-		if ( $testImage->count() === 1 ) {
+		$frameCount = method_exists( $testImage, 'count' ) ? $testImage->count() : $testImage->getNumberImages();
+
+		if ( $frameCount === 1 ) {
 			return parent::resize( $max_w, $max_h, $crop );
 		}
 
@@ -122,7 +103,9 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 	}
 
 	public function _save( $image, $filename = null, $mime_type = null ) {
-		if ( $this->image->count() === 1 ) {
+		$frameCount = method_exists( $this->image, 'count' ) ? $this->image->count() : $this->image->getNumberImages();
+
+		if ( $frameCount === 1 ) {
 			return parent::_save( $image, $filename, $mime_type );
 		}
 
@@ -132,13 +115,13 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 			$this->image->writeImages( $filename, true );
 
 			/** This filter is documented in wp-includes/class-wp-image-editor-gd.php */
-			return [
+			return array(
 				'path'      => $filename,
 				'file'      => wp_basename( apply_filters( 'image_make_intermediate_size', $filename ) ),
 				'width'     => $this->size['width'],
 				'height'    => $this->size['height'],
 				'mime-type' => $mime_type,
-			];
+			);
 		} catch ( Exception $e ) {
 			return new WP_Error( 'gattiny-save-error', __( 'Gattiny generated an error: ', 'gattiny' ) . $e->getMessage() );
 		}
