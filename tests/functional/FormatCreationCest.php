@@ -5,15 +5,14 @@ use Codeception\Exception\ModuleException;
 
 class FormatCreationCest {
 
-	protected $gif = 'images/medium.gif';
-
-	protected $frameCount = 2;
+	protected $gif = 'images/small-2.gif'; //200 x 200
+	protected $frameCount = 13;
 
 	protected $uploads;
 
 	protected $sizeMap = [
 		'custom-format-one'  => '100x80',
-		'custom-format-two ' => '133x74',
+		'custom-format-two ' => '133x133',
 		'thumbnail'          => '150x150',
 	];
 
@@ -68,11 +67,15 @@ PHP;
 		$I->seeResponseCodeIs( 200 );
 
 		$I->amInPath( $this->uploads );
+		$files = glob( $this->uploads . '/small-2*.gif' );
+		codecept_debug( 'Found files: ' . implode( ', ', array_map( function ( $f ) {
+				return basename( $f );
+			}, $files ) ) );
+		$I->assertCount( 4, $files );
 		foreach ( $this->sizeMap as $slug => $size ) {
 			$suffix = '' !== $size ? '-' . $size : '';
 			$I->seeFileFound( basename( $this->gif, '.gif' ) . $suffix . '.gif', $this->uploads );
 		}
-		$I->assertCount( 4, glob( $this->uploads . '/medium*.gif' ) );
 	}
 
 	/**
