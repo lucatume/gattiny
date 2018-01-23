@@ -67,7 +67,7 @@ before_install:
   - yes | pecl install imagick
 
 install:
-  - composer update
+  - composer install
   # install WordPress
   - cd $TRAVIS_BUILD_DIR/www
   - wp core download --version=$WP_VERSION
