@@ -1,6 +1,6 @@
 <?php
 
-class gattiny_Settings_Page {
+class gattiny_SettingsPage {
 
 	/**
 	 * @var string
@@ -33,12 +33,18 @@ class gattiny_Settings_Page {
 		);
 	}
 
-	public function render() {
-		$this->templates->render( 'options-page', array(
+	public function render( $echo = true ) {
+		$compiled = $this->templates->compile( 'options-page', array(
 			'title'       => __( 'Gattiny Settings' ),
 			'page'        => $this->page,
 			'optionGroup' => 'gattiny',
 		) );
+
+		if ( $echo ) {
+			echo $compiled;
+		}
+
+		return $compiled;
 	}
 
 	public function initSettings() {

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit023ba596fb6cfc3148d09258a08377cb
+class ComposerStaticInitacd46e666511c4edd5e877cc20a0e770
 {
     public static $prefixesPsr0 = array (
         'x' => 
@@ -37,8 +37,9 @@ class ComposerStaticInit023ba596fb6cfc3148d09258a08377cb
         'gattiny_ImageSize' => __DIR__ . '/../..' . '/src/gattiny/ImageSize.php',
         'gattiny_ImageSizes' => __DIR__ . '/../..' . '/src/gattiny/ImageSizes.php',
         'gattiny_MediaScripts' => __DIR__ . '/../..' . '/src/gattiny/MediaScripts.php',
+        'gattiny_PluginsScreen' => __DIR__ . '/../..' . '/src/gattiny/PluginsScreen.php',
         'gattiny_Settings' => __DIR__ . '/../..' . '/src/gattiny/Settings.php',
-        'gattiny_Settings_Page' => __DIR__ . '/../..' . '/src/gattiny/Settings/Page.php',
+        'gattiny_SettingsPage' => __DIR__ . '/../..' . '/src/gattiny/SettingsPage.php',
         'gattiny_System' => __DIR__ . '/../..' . '/src/gattiny/System.php',
         'gattiny_Utils_Templates' => __DIR__ . '/../..' . '/src/gattiny/Utils/Templates.php',
         'tad_DI52_Container' => __DIR__ . '/..' . '/lucatume/di52/src/tad/DI52/Container.php',
@@ -53,8 +54,8 @@ class ComposerStaticInit023ba596fb6cfc3148d09258a08377cb
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixesPsr0 = ComposerStaticInit023ba596fb6cfc3148d09258a08377cb::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit023ba596fb6cfc3148d09258a08377cb::$classMap;
+            $loader->prefixesPsr0 = ComposerStaticInitacd46e666511c4edd5e877cc20a0e770::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitacd46e666511c4edd5e877cc20a0e770::$classMap;
 
         }, null, ClassLoader::class);
     }

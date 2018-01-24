@@ -21,5 +21,9 @@ add_action( 'admin_init', $di->callback( 'gattiny_System', 'maybeDeactivate' ) )
 add_filter( 'wp_image_editors', $di->callback( 'gattiny_ImageEditors', 'filterImageEditors' ) );
 add_action( 'print_media_templates', $di->callback( 'gattiny_MediaScripts', 'printScripts' ) );
 add_action( 'admin_enqueue_scripts', $di->callback( 'gattiny_AdminScripts', 'enqueueScripts' ) );
+add_filter( 'plugin_action_links', $di->callback( 'gattiny_PluginsScreen', 'addActionLinks' ) );
 
 $di->register( 'gattiny_Settings' );
+
+global $gattinyServiceLocator;
+$gattinyServiceLocator = $di;
