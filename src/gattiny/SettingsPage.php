@@ -40,7 +40,7 @@ class gattiny_SettingsPage {
 			'optionGroup' => 'gattiny',
 		) );
 
-		if ( $echo ) {
+		if ( false !== $echo ) {
 			echo $compiled;
 		}
 
