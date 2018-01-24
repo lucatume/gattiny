@@ -38,13 +38,19 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 
 			if ( ! gattiny_ImageSizes::shouldResizeAnimated( $size ) ) {
 				$this->size = $originalSize;
-				$resized = parent::resize( $newWidth, $newHeight, $crop );
+				$resized    = parent::resize( $newWidth, $newHeight, $crop );
 
 				if ( ! is_wp_error( $resized ) && $resized ) {
-					$metadata[ $size ] = parent::_save( $this->image );
+					continue;
 				}
 
-				continue;
+				$saved = parent::_save( $this->image );
+
+				if ( ! is_wp_error( $saved ) ) {
+					continue;
+				}
+
+				$metadata[ $size ] = $saved;
 			}
 
 			if ( ! ( image_resize_dimensions( $this->size['width'], $this->size['height'], $newWidth, $newHeight, $crop ) ) ) {
