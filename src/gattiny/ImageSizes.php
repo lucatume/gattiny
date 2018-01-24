@@ -3,8 +3,11 @@
 class gattiny_ImageSizes {
 
 	const OPTION = 'gattiny-imageSizes';
+
 	const DO_NOT_CONVERT = 'do-not-convert';
+
 	const CONVERT_ANIMATED = 'convert-animated';
+
 	const CONVERT_STILL = 'convert-still';
 
 	/**
@@ -25,26 +28,48 @@ class gattiny_ImageSizes {
 		       || ! isset( $option[ $size ] );
 	}
 
+	public function getDefaultConversionFor( $imageSize ) {
+		$sizes = $this->getSizes();
+
+		if ( empty( $sizes ) || empty( $sizes[ $imageSize ] ) ) {
+			return self::CONVERT_STILL;
+		}
+
+		$size = $sizes[ $imageSize ];
+
+		if ( $size->getConversionCost() > self::getMediumThreshold() ) {
+			return self::CONVERT_STILL;
+		}
+
+		return self::CONVERT_ANIMATED;
+	}
+
 	/**
 	 * @return gattiny_ImageSize[]
 	 */
 	public function getSizes() {
-		if ( null === $this->imageSizes ) {
-			$this->imageSizes = array();
-
-			$imageSizes = $this->getImageSizes();
-
-			foreach ( $imageSizes as $name => $data ) {
-				$this->imageSizes[ $name ] = new gattiny_ImageSize(
-					$name,
-					$this->getImageWidth( $name ),
-					$this->getImageHeight( $name ),
-					$this->isImageCropping( $name )
-				);
-			}
-		}
+		$this->initImageSizes();
 
 		return $this->imageSizes;
+	}
+
+	protected function initImageSizes() {
+		if ( is_array( $this->imageSizes ) ) {
+			return;
+		}
+
+		$this->imageSizes = array();
+
+		$imageSizes = $this->getImageSizes();
+
+		foreach ( $imageSizes as $name => $data ) {
+			$this->imageSizes[ $name ] = new gattiny_ImageSize(
+				$name,
+				$this->getImageWidth( $name ),
+				$this->getImageHeight( $name ),
+				$this->isImageCropping( $name )
+			);
+		}
 	}
 
 	protected function getImageSizes() {
@@ -115,11 +140,11 @@ class gattiny_ImageSizes {
 		return false;
 	}
 
-	public function getLowThreshold() {
-		return 200 * 200;
-	}
-
 	public function getMediumThreshold() {
 		return 600 * 600;
+	}
+
+	public function getLowThreshold() {
+		return 200 * 200;
 	}
 }

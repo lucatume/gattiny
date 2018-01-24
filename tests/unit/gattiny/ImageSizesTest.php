@@ -176,4 +176,53 @@ class ImageSizesTest extends \Codeception\Test\Unit {
 		$this->assertFalse( ImageSizes::shouldNotResize( 'size' ) );
 		$this->assertFalse( ImageSizes::shouldResizeAnimated( 'size' ) );
 	}
+
+	/**
+	 * It should return the correct default conversion option for image sizes
+	 *
+	 * @test
+	 */
+	public function should_return_the_correct_default_conversion_option_for_image_sizes() {
+		global $_wp_additional_image_sizes;
+		$_wp_additional_image_sizes = [
+			'small-format'  => [
+				'width'  => 200,
+				'height' => 200,
+				'crop'   => false,
+			],
+			'medium-format' => [
+				'width'  => 500,
+				'height' => 500,
+				'crop'   => true,
+			],
+			'large-format'  => [
+				'width'  => 800,
+				'height' => 800,
+				'crop'   => true,
+			],
+		];
+		defineFunction( 'get_intermediate_image_sizes', function () {
+			return [ 'small-format', 'medium-format', 'large-format', 'thumbnail' ];
+		} );
+		defineFunction( 'get_option', function ( $option ) {
+			$map = [
+				'thumbnail_size_w' => 150,
+				'thumbnail_size_h' => 100,
+				'thumbnail_crop'   => true,
+			];
+
+			if ( ! isset( $map[ $option ] ) ) {
+				throw new \InvalidArgumentException( "Option {$option} is not mapped" );
+			}
+
+			return $map[ $option ];
+		} );
+
+		$sut = new ImageSizes();
+
+		$this->assertEquals( ImageSizes::CONVERT_ANIMATED, $sut->getDefaultConversionFor( 'small-format' ) );
+		$this->assertEquals( ImageSizes::CONVERT_ANIMATED, $sut->getDefaultConversionFor( 'medium-format' ) );
+		$this->assertEquals( ImageSizes::CONVERT_STILL, $sut->getDefaultConversionFor( 'large-format' ) );
+		$this->assertEquals( ImageSizes::CONVERT_ANIMATED, $sut->getDefaultConversionFor( 'thumbnail' ) );
+	}
 }

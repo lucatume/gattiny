@@ -88,7 +88,7 @@ class gattiny_Settings_Page {
 
 		/** @var gattiny_ImageSize $imageSize */
 		foreach ( $this->imageSizes->getSizes() as $name => $imageSize ) {
-			$imageSizeOption = $option[ $name ];
+			$imageSizeOption = isset( $option[ $name ] ) ? $option[ $name ] : $this->imageSizes->getDefaultConversionFor( $imageSize->getName() );
 			$fields          = array();
 
 			$width          = $imageSize->getWidth();
