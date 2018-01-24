@@ -14,9 +14,9 @@ class PluginsScreenTest extends \Codeception\Test\Unit {
 	protected $tester;
 
 	/**
-	 * Test snapshot for addActionLinks
+	 * Test snapshot addActionLinks
 	 */
-	public function test_snapshot_for_add_action_links() {
+	public function test_snapshot_add_action_links() {
 		\tad\FunctionMockerLe\define( 'esc_html__', function ( $in ) {
 			return $in;
 		} );
