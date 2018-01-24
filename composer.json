@@ -18,7 +18,9 @@
         "vlucas/phpdotenv": "^2.4",
         "site5/phantoman": "^2.0",
         "lucatume/function-mocker-le": "^1.0",
-        "wp-cli/checksum-command": "1.0.5"
+        "wp-cli/checksum-command": "1.0.5",
+        "spatie/phpunit-snapshot-assertions": "^1.2",
+        "electrolinux/phpquery": "^0.9.6"
     },
     "autoload": {
         "psr-0": {
