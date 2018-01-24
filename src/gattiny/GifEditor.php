@@ -26,6 +26,9 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 		}
 
 		foreach ( $sizes as $size => $data ) {
+			$this->size  = $originalSize;
+			$this->image = $original;
+
 			if ( gattiny_ImageSizes::shouldNotResize( $size ) ) {
 				continue;
 			}
@@ -51,35 +54,31 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 				}
 
 				$metadata[ $size ] = $saved;
+			} else {
+				if ( ! image_resize_dimensions( $this->size['width'], $this->size['height'], $newWidth, $newHeight, $crop ) ) {
+					continue;
+				}
 
-				continue;
-			}
+				$resized = $this->resize( $newWidth, $newHeight, $crop );
 
-			if ( ! ( image_resize_dimensions( $this->size['width'], $this->size['height'], $newWidth, $newHeight, $crop ) ) ) {
-				return new WP_Error( 'error_getting_dimensions', __( 'Could not calculate resized image dimensions' ) );
-			}
+				$duplicate = ( ( $originalWidth == $newWidth ) && ( $originalHeight == $newHeight ) );
 
-			$resized = $this->resize( $newWidth, $newHeight, $crop );
+				if ( ! is_wp_error( $resized ) && ! $duplicate ) {
+					$resized = $this->_save( $this->image );
 
-			$duplicate = ( ( $originalWidth == $newWidth ) && ( $originalHeight == $newHeight ) );
+					$this->image->clear();
+					$this->image->destroy();
+					$this->image = null;
 
-			if ( ! is_wp_error( $resized ) && ! $duplicate ) {
-				$resized = $this->_save( $this->image );
+					if ( is_wp_error( $resized ) || ! $resized ) {
+						continue;
+					}
 
-				$this->image->clear();
-				$this->image->destroy();
-				$this->image = null;
-
-				if ( ! is_wp_error( $resized ) && $resized ) {
 					unset( $resized['path'] );
 					$metadata[ $size ] = $resized;
 				}
 			}
-
-			$this->size  = $originalSize;
-			$this->image = $original;
 		}
-
 
 		return $metadata;
 	}
