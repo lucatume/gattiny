@@ -51,6 +51,8 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 				}
 
 				$metadata[ $size ] = $saved;
+
+				continue;
 			}
 
 			if ( ! ( image_resize_dimensions( $this->size['width'], $this->size['height'], $newWidth, $newHeight, $crop ) ) ) {
