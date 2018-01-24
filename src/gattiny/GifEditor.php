@@ -40,13 +40,13 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 				$this->size = $originalSize;
 				$resized    = parent::resize( $newWidth, $newHeight, $crop );
 
-				if ( ! is_wp_error( $resized ) && $resized ) {
+				if ( is_wp_error( $resized ) || ! $resized ) {
 					continue;
 				}
 
 				$saved = parent::_save( $this->image );
 
-				if ( ! is_wp_error( $saved ) ) {
+				if ( is_wp_error( $saved ) ) {
 					continue;
 				}
 
