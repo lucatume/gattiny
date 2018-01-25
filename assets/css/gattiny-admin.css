@@ -31,6 +31,9 @@ Gattiny style sheet
   position: relative;
   top: 3px;
   background-color: indianred; }
+.wp-admin .gattiny .full-width {
+  display: block;
+  width: 100%; }
 
 /*
 Overrides

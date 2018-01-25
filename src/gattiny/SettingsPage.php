@@ -35,9 +35,11 @@ class gattiny_SettingsPage {
 
 	public function render( $echo = true ) {
 		$compiled = $this->templates->compile( 'options-page', array(
-			'title'       => __( 'Gattiny Settings' ),
-			'page'        => $this->page,
-			'optionGroup' => 'gattiny',
+			'title'          => __( 'Gattiny Settings' ),
+			'page'           => $this->page,
+			'optionGroup'    => 'gattiny',
+			'headerImage'    => plugins_url( 'assets/images/gattiny-header.png', GATTINY_FILE ),
+			'headerImageAlt' => __( 'Gattiny settings header image', 'gattiny' ),
 		) );
 
 		if ( false !== $echo ) {
