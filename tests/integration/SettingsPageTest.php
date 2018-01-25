@@ -21,6 +21,6 @@ class SettingsPageTest extends \Codeception\TestCase\WPTestCase {
 
 		$out = $sut->render( false );
 
-		$this->assertMatchesSnapshot( $out, new WPOutput() );
+		$this->assertMatchesSnapshot( $out, new WPOutput(getenv('WP_URL')) );
 	}
 }
