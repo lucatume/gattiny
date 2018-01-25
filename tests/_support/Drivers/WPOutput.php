@@ -26,10 +26,41 @@ class WPOutput extends VarDriver {
 	public function match( $expected, $actual ) {
 		$evaluated = eval( substr( $expected, strlen( '<?php ' ) ) );
 
-		$ex = $this->removeTimeValues( $this->removeHosts( $evaluated ) );
-		$ac = $this->removeTimeValues( $this->removeHosts( $actual ) );
+		Assert::assertEquals( $this->normalize( $evaluated ), $this->normalize( $actual ) );
+	}
 
-		Assert::assertEquals( $ex, $ac );
+	protected function normalize( string $input ): string {
+		$output = $this->replaceUrls( $input );
+		$output = $this->removeTimeValues( $output );
+		$output = $this->squashSpaces( $output );
+
+		return $output;
+	}
+
+	protected function replaceUrls( string $input ): string {
+		$doc = \phpQuery::newDocument( $input );
+
+		foreach ( [ 'href', 'src' ] as $name ) {
+			$doc->find( "*[{$name}]" )->each( function ( \DOMElement $t ) use ( $name ) {
+				$current     = $t->getAttribute( $name );
+				$snapshotUrl = sprintf( '%s://%s',
+					parse_url( $current, PHP_URL_SCHEME ),
+					parse_url( $current, PHP_URL_HOST )
+				);
+
+				if ( $port = parse_url( $current, PHP_URL_PORT ) ) {
+					$snapshotUrl .= ":{$port}";
+				}
+
+				$t->setAttribute( $name, str_replace( $snapshotUrl, $this->url, $current ) );
+			} );
+		}
+
+		return $this->squashSpaces( $doc->__toString() );
+	}
+
+	protected function squashSpaces( string $input ): string {
+		return preg_replace( '/\\s{2,}/', '', $input );
 	}
 
 	protected function removeTimeValues( string $input ): string {
@@ -42,33 +73,6 @@ class WPOutput extends VarDriver {
 			} );
 		}
 
-		return $this->normalize( $doc->__toString() );
-	}
-
-	protected function normalize( string $input ): string {
-		return preg_replace( '/\\s{2,}/', '', $input );
-	}
-
-	protected function removeHosts( string $input ): string {
-		// remove nonce and other time-dependant values values to remove the time dependency
-		$doc = \phpQuery::newDocument( $input );
-
-		foreach ( [ 'href', 'src' ] as $name ) {
-			$doc->find( "*[{$name}]" )->each( function ( \DOMElement $t ) use ( $name ) {
-				$current    = $t->getAttribute( $name );
-				$inSnapshot = sprintf( '%s://%s',
-					parse_url( $current, PHP_URL_SCHEME ),
-					parse_url( $current, PHP_URL_HOST )
-				);
-
-				if ( $port = parse_url( $current, PHP_URL_PORT ) ) {
-					$inSnapshot .= ":{$port}";
-				}
-
-				$t->setAttribute( $name, str_replace( $inSnapshot, $this->url, $current ) );
-			} );
-		}
-
-		return $this->normalize( $doc->__toString() );
+		return $this->squashSpaces( $doc->__toString() );
 	}
 }
