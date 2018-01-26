@@ -2,9 +2,9 @@
 
 namespace gattiny;
 
-use gattiny\TestDrivers\WPOutput;
 use gattiny_SettingsPage as SettingsPage;
 use Spatie\Snapshots\MatchesSnapshots;
+use tad\WPBrowser\Snapshot\WPHtmlOutputDriver;
 
 class SettingsPageTest extends \Codeception\TestCase\WPTestCase {
 
@@ -21,6 +21,6 @@ class SettingsPageTest extends \Codeception\TestCase\WPTestCase {
 
 		$out = $sut->render( false );
 
-		$this->assertMatchesSnapshot( $out, new WPOutput(getenv('WP_URL')) );
+		$this->assertMatchesSnapshot( $out, new WPHtmlOutputDriver( getenv( 'WP_URL' ) ) );
 	}
 }
