@@ -14,7 +14,7 @@
         "xrstf/composer-php52": "^1.0"
     },
     "require-dev": {
-        "lucatume/wp-browser": "^1.21.25",
+        "lucatume/wp-browser": "^1.22.2",
         "vlucas/phpdotenv": "^2.4",
         "site5/phantoman": "^2.0",
         "lucatume/function-mocker-le": "^1.0",

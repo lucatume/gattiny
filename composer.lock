@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "8e2f8daa227ba8fde94da7cbd2dce0cd",
+    "content-hash": "a96838aea59f41ab19f6596ee1cf88e8",
     "packages": [
         {
             "name": "lucatume/di52",
@@ -1362,21 +1362,22 @@
         },
         {
             "name": "lucatume/wp-browser",
-            "version": "1.22.0",
+            "version": "1.22.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lucatume/wp-browser.git",
-                "reference": "eae7bb424c8d1e2d2734c5ee6709a914da1e0b08"
+                "reference": "9ba0d7ddf52e721c8a0e9919f909f3c67a4aedeb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lucatume/wp-browser/zipball/eae7bb424c8d1e2d2734c5ee6709a914da1e0b08",
-                "reference": "eae7bb424c8d1e2d2734c5ee6709a914da1e0b08",
+                "url": "https://api.github.com/repos/lucatume/wp-browser/zipball/9ba0d7ddf52e721c8a0e9919f909f3c67a4aedeb",
+                "reference": "9ba0d7ddf52e721c8a0e9919f909f3c67a4aedeb",
                 "shasum": ""
             },
             "require": {
                 "antecedent/patchwork": "^2.0",
                 "codeception/codeception": "^2.3",
+                "electrolinux/phpquery": "^0.9.6",
                 "gumlet/php-image-resize": "^1.6",
                 "lucatume/codeception-setup-local": "~1.0",
                 "lucatume/wp-browser-commons": "^1.2.5",
@@ -1384,7 +1385,6 @@
                 "wp-cli/wp-cli": "^1.1"
             },
             "require-dev": {
-                "electrolinux/phpquery": "^0.9.6",
                 "mikey179/vfsstream": "^1.6",
                 "ofbeaton/console-tester": "^1.1",
                 "site5/phantoman": "^1.1",
@@ -1422,7 +1422,7 @@
                 "codeception",
                 "wordpress"
             ],
-            "time": "2018-01-26T13:26:56+00:00"
+            "time": "2018-01-27T09:01:51+00:00"
         },
         {
             "name": "lucatume/wp-browser-commons",
