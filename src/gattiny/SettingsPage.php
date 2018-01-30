@@ -71,7 +71,7 @@ class gattiny_SettingsPage {
 	public function renderImageSizesSection() {
 		echo '<p>',
 		esc_html__(
-			'Converting animated images,  while preserving their animations, could potentially take a long time to finish. If you are experiencing an unresponsive UI or timeout messages use the settings below to tweak Gattiny behaviour.',
+			'Converting animated images, while preserving their animations, can potentially take a long time to finish. If you are experiencing an unresponsive UI or timeout messages use the settings below to tweak Gattiny behaviour.',
 			'gattiny'
 		),
 		'</p><p>',
