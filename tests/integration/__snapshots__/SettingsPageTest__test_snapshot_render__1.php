@@ -7,7 +7,7 @@
 	</div>
 
 	<input type=\'hidden\' name=\'option_page\' value=\'gattiny\' /><input type="hidden" name="action" value="update" /><input type="hidden" id="_wpnonce" name="_wpnonce" value="3a72d9cf7e" /><input type="hidden" name="_wp_http_referer" value="" /><h2>Image sizes</h2>
-<p>Converting animated images,  while preserving their animations, could potentially take a long time to finish. If you are experiencing an unresponsive UI or timeout messages use the settings below to tweak Gattiny behaviour.</p><p>Images will never be upscaled to larger format; Gattiny will not change the default WordPress behaviour.</p><table class="form-table"><tr><th scope="row">Decide how each image size conversion should be handled</th><td><fieldset class="interline">
+<p>Converting animated images, while preserving their animations, can potentially take a long time to finish. If you are experiencing an unresponsive UI or timeout messages use the settings below to tweak Gattiny behaviour.</p><p>Images will never be upscaled to larger format; Gattiny will not change the default WordPress behaviour.</p><table class="form-table"><tr><th scope="row">Decide how each image size conversion should be handled</th><td><fieldset class="interline">
 	<legend>Image size <code>thumbnail</code> - (w 150px, h 150px, cropping: yes)</legend>
 			<label for="gattiny-imageSizes[thumbnail]" class="">
 	<input type="radio"
