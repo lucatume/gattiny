@@ -80,7 +80,7 @@ install:
   - ln -s  $TRAVIS_BUILD_DIR $TRAVIS_BUILD_DIR/www/wp-content/plugins/gattiny
   - ls -la $TRAVIS_BUILD_DIR/www/wp-content/plugins
   # activate the plugin on the site
-  - wp plugin deactivate $(wp plugin list --status=active --field=name)
+  - wp plugin deactivate --all
   - wp plugin activate gattiny
   # export a dump of the just installed database to the _data folder to provide tests with a starting fixture
   - wp db export $TRAVIS_BUILD_DIR/tests/_data/dump.sql
