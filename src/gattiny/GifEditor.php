@@ -26,61 +26,84 @@ class gattiny_GifEditor extends WP_Image_Editor_Imagick {
 		}
 
 		foreach ( $sizes as $size => $data ) {
-			$this->size  = $originalSize;
-			$this->image = $original;
-
 			if ( gattiny_ImageSizes::shouldNotResize( $size ) ) {
 				continue;
 			}
 
-			$originalHeight = (int) $originalSize['height'];
-			$newHeight      = (int) $data['height'];
-			$originalWidth  = (int) $originalSize['width'];
-			$newWidth       = (int) $data['width'];
-			$crop           = (bool) $data['crop'];
+			$this->size  = $originalSize;
+			$this->image = $original;
+
+			$sizeData = $this->generateSizeData( $size, $originalSize, $data );
 
 			if ( ! gattiny_ImageSizes::shouldResizeAnimated( $size ) ) {
-				$this->size = $originalSize;
-				$resized    = parent::resize( $newWidth, $newHeight, $crop );
-
-				if ( is_wp_error( $resized ) || ! $resized ) {
-					continue;
-				}
-
-				$saved = parent::_save( $this->image );
-
-				if ( is_wp_error( $saved ) ) {
-					continue;
-				}
-
-				$metadata[ $size ] = $saved;
+				$resized = $this->resizeAnimated( $sizeData );
 			} else {
-				if ( ! image_resize_dimensions( $this->size['width'], $this->size['height'], $newWidth, $newHeight, $crop ) ) {
-					continue;
-				}
+				$resized = $this->resizeStill( $sizeData );
+			}
 
-				$resized = $this->resize( $newWidth, $newHeight, $crop );
-
-				$duplicate = ( ( $originalWidth == $newWidth ) && ( $originalHeight == $newHeight ) );
-
-				if ( ! is_wp_error( $resized ) && ! $duplicate ) {
-					$resized = $this->_save( $this->image );
-
-					$this->image->clear();
-					$this->image->destroy();
-					$this->image = null;
-
-					if ( is_wp_error( $resized ) || ! $resized ) {
-						continue;
-					}
-
-					unset( $resized['path'] );
-					$metadata[ $size ] = $resized;
-				}
+			if ( false !== $resized ) {
+				$metadata[ $size ] = $resized;
 			}
 		}
 
 		return $metadata;
+	}
+
+	protected function generateSizeData( $size, $originalSize, $data ) {
+		$sizeData = array(
+			'size'           => $size,
+			'originalSize'   => $originalSize,
+			'originalHeight' => (int) $originalSize['height'],
+			'newHeight'      => (int) $data['height'],
+			'originalWidth'  => (int) $originalSize['width'],
+			'newWidth'       => (int) $data['width'],
+			'crop'           => (bool) $data['crop'],
+		);
+
+		return $sizeData;
+	}
+
+	protected function resizeAnimated( array $data ) {
+		$this->size = $data['originalSize'];
+		$resized    = parent::resize( $data['newWidth'], $data['newHeight'], $data['crop'] );
+
+		if ( is_wp_error( $resized ) || ! $resized ) {
+			return false;
+		}
+
+		$saved = parent::_save( $this->image );
+
+		if ( is_wp_error( $saved ) ) {
+			return false;
+		}
+
+		return $saved;
+	}
+
+	protected function resizeStill( array $data ) {
+		if ( ! image_resize_dimensions( $this->size['width'], $this->size['height'], $data['newWidth'], $data['newHeight'], $data['crop'] ) ) {
+			return false;
+		}
+
+		$resized = $this->resize( $data['newWidth'], $data['newHeight'], $data['crop'] );
+
+		$duplicate = ( ( $data['originalWidth'] == $data['newWidth'] ) && ( $data['originalHeight'] == $data['newHeight'] ) );
+
+		if ( ! is_wp_error( $resized ) && ! $duplicate ) {
+			$resized = $this->_save( $this->image );
+
+			$this->image->clear();
+			$this->image->destroy();
+			$this->image = null;
+
+			if ( is_wp_error( $resized ) || ! $resized ) {
+				return false;
+			}
+
+			unset( $resized['path'] );
+
+			return $resized;
+		}
 	}
 
 	public function resize( $max_w, $max_h, $crop = false ) {
