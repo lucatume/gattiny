@@ -13,7 +13,11 @@ Domain Path: /languages
 define( 'GATTINY_FILE', __FILE__ );
 define( 'GATTINY_DIR', dirname( __FILE__ ) );
 
-include_once dirname( __FILE__ ) . '/vendor/autoload_52.php';
+if ( version_compare( PHP_VERSION, '5.2.17', '<=' ) ) {
+	include_once dirname( __FILE__ ) . '/vendor/autoload_52.php';
+} else {
+	include_once dirname( __FILE__ ) . '/vendor/autoload.php';
+}
 
 $di = new tad_DI52_Container();
 
